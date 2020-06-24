@@ -10,8 +10,8 @@
 			doom: String
         },
         computed: {
-			emojii: function()  {
-				switch(this.doom) {
+			emojii: vm =>  {
+				switch(vm.doom) {
 					case DOOM.FACEPALM: return '🤦';
 					case DOOM.CROSSBONES: return '☠';
 					case DOOM.BANDAGE: return '🤕';
