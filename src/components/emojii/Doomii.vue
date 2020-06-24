@@ -1,32 +1,5 @@
 <template>
-    <span>{{emojii}}
-        <span v-if="doom==null">
-            <span class="facepalm">🤦</span>
-            <span class="crossbones">☠</span>
-            <span class="bandage">🤕</span>
-            <span class="spider">🕷</span>
-            <span class="snake">🐍</span>
-            <span class="volcano">🌋</span>
-            <span class="zombie">🧟‍♂️</span>
-            <span class="bomb">💣</span>
-            <span class="tornado">🌪</span>
-            <span class="rain-and-thunder">⛈</span>
-            <span class="heartbreak">💔</span>
-            <span class="double-exclaim">‼</span>
-            <span class="joker">🃏</span>
-            <span class="sos">🆘</span>
-            <span class="pirate">🏴‍☠️</span>
-            <span class="vampire">🧛‍♂️</span>
-            <span class="suit-heart-black">♥</span>
-            <span class="suit-heart-white">♡</span>
-            <span class="suit-spade-black">♠</span>
-            <span class="suit-spade-white">♤</span>
-            <span class="suit-diamond-black">♦</span>
-            <span class="suit-diamond-white">♢</span>
-            <span class="suit-club-black">♣</span>
-            <span class="suit-club-white">♧</span>
-        </span>
-    </span>
+    <span>{{emojii}}</span>
 </template>
 
 <script>
@@ -74,6 +47,26 @@
 					case CROSSBONES: return '☠';
 					case BANDAGE: return '🤕';
 					case SPIDER: return '🕷';
+					case SNAKE: return '🐍';
+					case VOLCANO: return '🌋';
+					case ZOMBIE: return '🧟‍♂️';
+					case BOMB: return '💣';
+					case TORNADO: return '🌪';
+					case RAIN_AND_THUNDER: return '⛈';
+					case HEARTBREAK: return '💔';
+					case DOUBLE_EXCLAIM: return '‼';
+					case JOKER: return '🃏';
+					case SOS: return '🆘';
+					case PIRATE: return '🏴‍☠️';
+					case VAMPIRE: return '🧛‍♂️';
+					case SUITE_BLACK_SPADE: return '♠';
+					case SUITE_BLACK_HEART: return '♥';
+					case SUITE_BLACK_DIAMOND: return '♦';
+					case SUITE_BLACK_CLUB: return '♣';
+					case SUITE_WHITE_SPADE : return '♤';
+					case SUITE_WHITE_DIAMOND : return '♢';
+					case SUITE_WHITE_CLUB : return '♧';
+					case SUITE_WHITE_HEART : return '♡';
 					default: return '🙃';
                 }
             }
