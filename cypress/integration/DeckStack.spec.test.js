@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import DeckStack from "../../src/model/DeckStack";
+import createDeck from "../../src/model/lexBeFriendsDeck";
 
 const freshDeck = (size) => {
 	return [...Array(size).keys()]
@@ -25,7 +26,6 @@ describe('Tests for DeckStack', () => {
 		expect(testStack.cards).to.not.equal(cardCopy);
 		const spots = new Array(52);
 		for (let j=0; j < 52; j++) spots[j] = new Set();
-		const firsts = new Set(), lasts = new Set(), tenths = new Set();
 		for (let i=0; i < 50; i++) {
 			testStack.shuffle();
 			for (let j=0; j<52; j++) spots[j].add(testStack.cards[j]);
@@ -67,7 +67,6 @@ describe('Tests for DeckStack', () => {
 
 	it ('Draws from deck well', () => {
 		const cards = freshDeck(52);
-		const cardCopy = [...cards];
 		const testStack = new DeckStack(cards);
 		const drawStacks = [];
 
@@ -85,4 +84,20 @@ describe('Tests for DeckStack', () => {
 
 	});
 
+});
+
+describe('Test integration of lex be friends deck with deck stack', () => {
+	it('Creates the lex be friends deck', () => {
+		const deck = createDeck();
+		expect(deck).to.be.an('array').that.has.length.greaterThan(40);
+		const biggerDeck = createDeck(10);
+		expect(deck.length).to.be.lessThan(biggerDeck.length);
+	})
+	it('Can perform operations on deck', () => {
+		const oneDeck = createDeck();
+		const deckStack = new DeckStack(createDeck());
+		deckStack.shuffle();
+		expect(deckStack.cards).to.have.deep.members(oneDeck);
+		expect(deckStack.cards).to.not.deep.equal(oneDeck);
+	});
 });
