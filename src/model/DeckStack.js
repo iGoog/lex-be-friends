@@ -57,7 +57,7 @@ export default class DeckStack {
 			cardsToDraw= cards.length;
 			position = 0;
 		}
-		if (!position) position = cards.length-cardsToDraw;
+		if (position==null) position = cards.length-cardsToDraw;
 		if (position < 0) position = 0;
 		const drawnCards = cards.splice(position, cardsToDraw);
 		if (!targetStack) targetStack = new DeckStack(drawnCards);
