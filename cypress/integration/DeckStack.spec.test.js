@@ -86,18 +86,18 @@ describe('Tests for DeckStack', () => {
 
 });
 
-describe('Test integration of lex be friends deck with deck stack', () => {
-	it('Creates the lex be friends deck', () => {
-		const deck = createDeck();
-		expect(deck).to.be.an('array').that.has.length.greaterThan(40);
-		const biggerDeck = createDeck(10);
-		expect(deck.length).to.be.lessThan(biggerDeck.length);
-	})
-	it('Can perform operations on deck', () => {
-		const oneDeck = createDeck();
-		const deckStack = new DeckStack(createDeck());
-		deckStack.shuffle();
-		expect(deckStack.cards).to.have.deep.members(oneDeck);
-		expect(deckStack.cards).to.not.deep.equal(oneDeck);
-	});
-});
+// describe('Test integration of lex be friends deck with deck stack', () => {
+// 	it('Creates the lex be friends deck', () => {
+// 		const deck = createDeck();
+// 		expect(deck).to.be.an('array').that.has.length.greaterThan(40);
+// 		const biggerDeck = createDeck(10);
+// 		expect(deck.length).to.be.lessThan(biggerDeck.length);
+// 	})
+// 	it('Can perform operations on deck', () => {
+// 		const oneDeck = createDeck();
+// 		const deckStack = new DeckStack(createDeck());
+// 		deckStack.shuffle();
+// 		expect(deckStack.cards).to.have.deep.members(oneDeck);
+// 		expect(deckStack.cards).to.not.deep.equal(oneDeck);
+// 	});
+// });

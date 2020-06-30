@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import LexFriendsGame from './components/LexFriendsGame.vue'
+import LexFriendsGame from './components/LexFriendsGame.vue';
 
 export default {
   name: 'App',

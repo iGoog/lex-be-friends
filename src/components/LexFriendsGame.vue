@@ -16,9 +16,14 @@
 	import Play from "./LexFriends/Play.vue";
 	import Hand from "./LexFriends/Hand.vue";
 	import Words from "./LexFriends/Words.vue";
+	import { useStore } from 'vuex';
+
 	export default {
 		name: "LexFriends.vue",
-		components: {Words, Hand, Play, Deck, Score, Title}
+		components: {Words, Hand, Play, Deck, Score, Title},
+        setup(props) {
+
+        }
 	}
 </script>
 

@@ -1,13 +1,15 @@
 export default class DeckStack {
-	constructor(cards, maxLength = cards.length*2) {
+	constructor(cards, hideCards = false, maxLength = cards.length*2) {
 		this.cards = cards;
 		this.maxLength = maxLength;
-		this._randBuffer = this.maxLength < 256 ? new Uint8Array(this.maxLength) : new Uint16Array(this.maxLength);
+		this.hideCards = false;
+		if (hideCards) this.hide();
+		//TODO: manage hiding within DeckStack
 	}
 
 	_rand() {
-		if (this.maxLength < this.cards.length) {
-			this.maxLength = this.cards.length * 2;
+		if (this._randBuffer == null || this.maxLength < this.cards.length) {
+			if (this.maxLength < this.cards.length) this.maxLength = this.cards.length * 2;
 			this._randBuffer = this.maxLength < 256 ? new Uint8Array(this.maxLength) : new Uint16Array(this.maxLength);
 		}
 		window.crypto.getRandomValues(this._randBuffer);
