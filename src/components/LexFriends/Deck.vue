@@ -1,5 +1,5 @@
 <template>
-    <span>deck</span>
+    <div class="deckArea">deck</div>
 </template>
 
 <script>
@@ -9,5 +9,10 @@
 </script>
 
 <style scoped>
+    .deckArea {
+        height: 100%;
+        width: 100%;
+        background-color: cornflowerblue;
+    }
 
 </style>

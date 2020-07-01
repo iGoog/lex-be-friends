@@ -1,17 +1,19 @@
 <template>
-    <div>
-        <CardRow></CardRow>
+    <div class="wordsArea">
+        Words
     </div>
 </template>
 
 <script>
-	import CardRow from "./CardRow.vue";
 	export default {
-		name: "Words",
-		components: {CardRow}
+		name: "Words"
 	}
 </script>
 
 <style scoped>
-
+.wordsArea {
+    width: 100%;
+    height: 100%;
+    background-color: blanchedalmond;
+}
 </style>

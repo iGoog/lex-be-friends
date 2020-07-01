@@ -3,9 +3,9 @@
     <Title id="title"/>
     <Words id="words"/>
     <Score id="score"/>
-    <Deck id="deck"/>
-    <Play id="play"/>
-    <Hand id="hand"/>
+    <Deck id="deck" v-on:drop.prevent="playCard('deck')" v-on:dragover.prevent v-on:dragenter.prevent />
+    <Play id="play" v-on:drop.prevent="playCard('play')" v-on:dragover.prevent v-on:dragenter.prevent />
+    <Hand id="hand" v-on:drop.prevent="playCard('hand')" v-on:dragover.prevent v-on:dragenter.prevent />
 </div>
 
 </template>
@@ -22,7 +22,11 @@
 		name: "LexFriends.vue",
 		components: {Words, Hand, Play, Deck, Score, Title},
         setup(props) {
-
+	        const store = useStore();
+            const playCard = (zone) => {
+	            store.commit('lexGame/dropCard', zone);
+            }
+            return { playCard };
         }
 	}
 </script>
@@ -38,7 +42,7 @@
                 "deck  deck"
                 "play  play"
                 "hand  hand";
-        grid-template-rows: 1fr 8fr 2fr 2fr 3fr;
+        grid-template-rows: 1fr 8fr 2fr 2fr 2fr;
         grid-template-columns: 3fr 1fr;
 
     }

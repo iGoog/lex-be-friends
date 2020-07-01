@@ -2,10 +2,11 @@ import socket from '../../network/sock/index'
 import createDeck from "../../model/lexBeFriends/createDeck";
 import DeckStack from "../../model/DeckStack";
 
-const gameDeck = new DeckStack(createDeck()).shuffle();
+const rawDeck = createDeck();
+const gameDeck = new DeckStack(rawDeck, false, rawDeck.length, (card)=>card.id).shuffle();
 const drawPile = gameDeck.draw();
 const playerHand = gameDeck.draw(10);
-const heldCard = new DeckStack([],false, 1);
+const heldCard = gameDeck.draw(0,0);
 const stackMap = new Map();
 stackMap.set('gameDeck', gameDeck);
 stackMap.set('drawPile', drawPile);
@@ -31,6 +32,9 @@ const state = () => ({
 		playerHand : playerHand.cards,
 		heldCard: heldCard.cards,
 		stackMap
+	},
+	gui : {
+		dropZone: {count: 0, zone: ''}
 	}
 });
 
@@ -82,9 +86,21 @@ const mutations = {
 	shuffleHand(state) {
 		state.game.stackMap.get('playerHand').shuffle();
 	},
-	pullCardFromHand(state, index) {
-		state.game.stackMap.get('playerHand').draw(1, index, heldCard);
+	pullCardFromHand(state, id) {
+		console.log(`pulling ${id}`);
+		state.game.stackMap.get('playerHand').drawById(id, heldCard);
+	},
+	placeCardInHand(state, {isBefore, id}) {
+		const hand = state.game.stackMap.get('playerHand');
+		const cardSelection = state.game.stackMap.get('heldCard');
+		if (isBefore) hand.placeBefore(cardSelection, id);
+		else hand.placeAfter(cardSelection, id);
+	},
+	dropCard(state, zone) {
+		state.gui.dropZone.zone = zone;
+		state.gui.dropZone.count++;
 	}
+
 
 };
 

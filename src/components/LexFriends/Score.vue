@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="scoreArea">
         <table>
             <thead>
             <tr>
@@ -35,5 +35,9 @@
 </script>
 
 <style scoped>
-
+.scoreArea {
+    width: 100%;
+    height: 100%;
+    background-color: burlywood;
+}
 </style>

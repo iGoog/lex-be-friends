@@ -1,5 +1,5 @@
 <template>
-    <span>play</span>
+    <div class="playZone">play</div>
 </template>
 
 <script>
@@ -9,5 +9,11 @@
 </script>
 
 <style scoped>
-
+.playZone {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: darkorange;
+}
 </style>
