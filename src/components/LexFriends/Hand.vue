@@ -4,22 +4,35 @@
     >
     <transition-group class="cardRow" name="fade" tag="ul" >
         <li v-for="card in hand" :id="card.id" :key="card.id" class="card"
-            :ref="el => { liCards.set(card.id, el) }"
             :class="{
             	hoveringRight: card.id==hoverId && hoverRight,
             	hoveringLeft: card.id==hoverId && !hoverRight
             }"
             draggable="true" v-on:dragstart="draw( $el, card.id)"
+
             v-on:dragover.prevent="dragHover($event, card.id)"
+            v-on:focusout="focusOut($event, card.id)"
+
+            v-on:touchstart="fakedrag('dragstart', $event)"
+            v-on:touchmove="fakedrag( 'dragover', $event)"
+            v-on:touchend="fakedrag('drop', $event)"
+            v-on:touchcancel="fakedrag('drop', $event)"
         >
             <Card :="card" />
         </li>
     </transition-group>
     </div>
 </template>
+<!--draw( $el, card.id)
 
+v-on:touchstart="touchStart(card.id, $event)"
+            v-on:touchend="touchEnd(card.id, $event)"
+            v-on:touchcancel="touchCancel(card.id, $event)"
+            v-on:touchmove="fakeDragover( $event)"
+
+-->
 <script>
-	import {reactive, ref, onBeforeUpdate, watch} from 'vue';
+	import {reactive, ref, watch} from 'vue';
 	import { useStore } from 'vuex'
     import Card from "./Card.vue";
 
@@ -34,21 +47,14 @@
         },
 		setup(props) {
 			const store = useStore();
-			const liCards = reactive(new Map());
 			const hoverId = ref(-1);
 			const hoverRight = ref(false);
-			onBeforeUpdate(()=> liCards.clear());
 
 			const calcPieceWidth = (offsetWidth) => (offsetWidth * 9.5) / 100;
 			const pieceWidth = ref(calcPieceWidth(300));
-            //const  { game: { playerHand } }  = store.state.lexGame;
-            //const hand = computed(() => playerHand);
-           // setTimeout(() => store.commit('lexGame/shuffleHand'), 2000);
-			//setTimeout(() => store.commit('lexGame/pullCardFromHand', 2), 1000);
-//			setTimeout(() => store.commit('lexGame/pullCardFromHand', 2), 4000);
             const draw = (e, id) => {
 	            pieceWidth.value = calcPieceWidth(e.offsetWidth);
-	            store.commit('lexGame/pullCardFromHand', id);
+	            store.commit('lexGame/pullCard', {id, zone: 'playerHand'});
             }
 			const dragExit = (msg) => {
             	console.log('dragExit ' + msg);
@@ -58,12 +64,12 @@
 	            hoverId.value = id;
 	            hoverRight.value = (e.offsetX / pieceWidth.value > 0.5);
             }
-            // ${e.offsetX} ${e.offsetY}
             const dropCard = () => {
             	console.log(`drop id now ${hoverId.value}`)
-	            store.commit('lexGame/placeCardInHand', {
+	            store.commit('lexGame/placeCard', {
 	                isBefore: !hoverRight.value,
-                    id: hoverId.value
+                    id: hoverId.value,
+                    zone: 'playerHand'
                 });
 	            hoverId.value = -1;
 	            return false;
@@ -83,10 +89,59 @@
                 }
             );
 
+            const touch = (eventName)=>  (id, event) => {
+            	console.log(`${eventName} ${id}`);
+            	console.log(event);
+            };
+
+            const fakeTouchDrag = () => {
+            	const point =  { x: 0, y: 0 };
+
+            	const _triggerFake = (type) => {
+		            const fakeDragoverEvent = new Event(type, {bubbles: true, cancelable: true});
+		            document.elementFromPoint(point.x, point.y).dispatchEvent(fakeDragoverEvent);
+                }
+                const _updatePoint = (event) => {
+            		if (event.touches && event.touches[0]!=null) {
+			            const {clientX, clientY} = event.touches[0];
+			            point.x = clientX;
+			            point.y = clientY;
+                    }
+                }
+                const fakedrag = (type, event) => {
+            		if (event) {
+			            event.stopPropagation();
+			            event.preventDefault();
+			            event.stopImmediatePropagation();
+			            _updatePoint(event);
+                    }
+	                _triggerFake(type);
+	                return false;
+                }
+                return fakedrag;
+            }
+            const fakedrag = fakeTouchDrag();
+
+
+
+            const fakeDragover = (event) => {
+                const {clientX, clientY} = event.touches[0];
+	            const fakeDragoverEvent = new Event('dragover', {bubbles: true, cancelable: true});
+	            document.elementFromPoint(clientX, clientY).dispatchEvent(fakeDragoverEvent);
+            }
+            const focusOut = (id, event) => {
+	             console.log(`focusOut ${id}`)
+	             console.log(event);
+            };
+
 
             //return { hand };
-            return { draw, dragHover, dragExit, dropCard,
-                pieceWidth, liCards, hoverId, hoverRight };
+            return { draw, dragHover, dragExit, dropCard, fakeDragover, focusOut, fakedrag,
+                touchStart: touch('touchStart'),
+	            touchMove: touch('touchMove'),
+	            touchEnd: touch('touchend'),
+	            touchCancel: touch('touchcancel'),
+                pieceWidth, hoverId, hoverRight };
         }
 	}
 </script>
@@ -102,9 +157,9 @@
     .cardRow {
         display: flex;
         justify-content: center;
-        padding: 0;
-        margin: 0;
+        align-content: center;
         list-style: none;
+        padding: 0px;
     }
 
     .fade-move, .fade-enter-active, .fade-leave-active {
@@ -123,10 +178,10 @@
         position: absolute;
     }
     .card {
-        width: 8.5vw;
-        height: 8.5vw;
+        width: 8.5vmin;
+        height: 8.5vmin;
         font-weight: bold;
-        margin: 0.5vw;
+        margin: 0.5vmin;
         padding: 0;
         cursor: grab;
         /*background-color: darkcyan;*/
@@ -135,10 +190,10 @@
     }
 
     .hoveringRight {
-        margin-right: 9vw;
+        margin-right: 9vmin;
     }
     .hoveringLeft {
-        margin-left: 9vw;
+        margin-left: 9vmin;
     }
 
     /*.hovering {*/

@@ -1,6 +1,6 @@
 <template>
     <div class="wordsArea">
-        Words
+
     </div>
 </template>
 

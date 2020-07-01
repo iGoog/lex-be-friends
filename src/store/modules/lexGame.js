@@ -7,10 +7,12 @@ const gameDeck = new DeckStack(rawDeck, false, rawDeck.length, (card)=>card.id).
 const drawPile = gameDeck.draw();
 const playerHand = gameDeck.draw(10);
 const heldCard = gameDeck.draw(0,0);
+const playerPlay = gameDeck.draw(0,0);
 const stackMap = new Map();
 stackMap.set('gameDeck', gameDeck);
 stackMap.set('drawPile', drawPile);
 stackMap.set('playerHand', playerHand);
+stackMap.set('playerPlay', playerPlay);
 stackMap.set('heldCard', heldCard);
 
 
@@ -31,6 +33,7 @@ const state = () => ({
 		discardPile: drawPile.cards,
 		playerHand : playerHand.cards,
 		heldCard: heldCard.cards,
+		playerPlay: playerPlay.cards,
 		stackMap
 	},
 	gui : {
@@ -86,12 +89,11 @@ const mutations = {
 	shuffleHand(state) {
 		state.game.stackMap.get('playerHand').shuffle();
 	},
-	pullCardFromHand(state, id) {
-		console.log(`pulling ${id}`);
-		state.game.stackMap.get('playerHand').drawById(id, heldCard);
+	pullCard(state, {id, zone='playerHand'}) {
+		state.game.stackMap.get(zone).drawById(id, heldCard);
 	},
-	placeCardInHand(state, {isBefore, id}) {
-		const hand = state.game.stackMap.get('playerHand');
+	placeCard(state, {isBefore, id, zone='playerHand'}) {
+		const hand = state.game.stackMap.get(zone);
 		const cardSelection = state.game.stackMap.get('heldCard');
 		if (isBefore) hand.placeBefore(cardSelection, id);
 		else hand.placeAfter(cardSelection, id);

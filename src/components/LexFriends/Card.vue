@@ -1,7 +1,6 @@
 <template>
-<!--     <span :class="{ removeAnimate: isRemoveAnimate }" draggable="true" v-on:dragstart="dragstart()">-->
         <svg class="svgFace" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <rect class="whoa" x="0" y="0" width="100%" height="100%" stroke="darkgrey" stroke-width="3px" fill="transparent"/>
+<!--            <rect x="0" y="0" width="100%" height="100%" stroke="darkgrey" stroke-width="3px" fill="transparent"/>-->
             <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="50" >
                 {{gameChar == 'wild'? '🦄' : gameChar }}
             </text>
@@ -9,7 +8,6 @@
                 {{points}}
             </text>
         </svg>
-<!--    </span>-->
 </template>
 
 <script>
@@ -34,7 +32,8 @@
 <style scoped>
 
     .svgFace {
-        background-color: cyan;
+        /*background-color: cyan;*/
+        background: linear-gradient(0deg,#00C9FF 0%, #92FE9D 100%);
         width: 100%;
         height: 100%;
         border-radius: 4px;

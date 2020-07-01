@@ -1,5 +1,5 @@
 <template>
-    <div class="deckArea">deck</div>
+    <div class="deckArea"></div>
 </template>
 
 <script>

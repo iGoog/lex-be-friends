@@ -1,6 +1,6 @@
 <template>
     <div class="titleArea">
-        <h1>Lex Be Friends! ?<Doomii :doom='doom' />?</h1>
+        <h1></h1>
     </div>
 </template>
 
