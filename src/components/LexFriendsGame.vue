@@ -1,5 +1,6 @@
+<!-- no scroll or double tap zoom with v-on:touchmove.stop.prevent v-on:touchstart.stop.prevent -->
 <template>
-<div id="lexFriends">
+<div id="lexFriends" v-on:touchmove.stop.prevent v-on:touchstart.stop.prevent>
     <Title id="title"/>
     <Words id="words"/>
     <Score id="score"/>
@@ -10,23 +11,11 @@
 </template>
 <script>
 
-    // setTimeout(()=> {
-	//     if('draggable' in document.createElement('span')) {
-	// 	    alert("Drag support detected");
-	//     }
-    // }, 2000)
-
 	function vh(v) {
 		let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 		return (v * h) / 100;
 	}
 	window.onload = () => window.scroll(0,vh(5));
-
-	function preventBehavior(e) {
-		e.preventDefault();
-	};
-	document.addEventListener("touchmove", preventBehavior, {passive: false}); // no scroll
-	document.addEventListener("touchstart", preventBehavior, {passive: false}); // no double tap zoom
 
 
 	import Title from "./LexFriends/Title.vue";

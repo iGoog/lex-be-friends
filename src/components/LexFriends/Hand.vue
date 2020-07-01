@@ -8,10 +8,8 @@
             	hoveringRight: card.id==hoverId && hoverRight,
             	hoveringLeft: card.id==hoverId && !hoverRight
             }"
-            draggable="true" v-on:dragstart="draw( $el, card.id)"
-
+            draggable="true" v-on:dragstart="draw( card.id)"
             v-on:dragover.prevent="dragHover($event, card.id)"
-            v-on:focusout="focusOut($event, card.id)"
 
             v-on:touchstart="fakedrag('dragstart', $event)"
             v-on:touchmove="fakedrag( 'dragover', $event)"
@@ -23,18 +21,11 @@
     </transition-group>
     </div>
 </template>
-<!--draw( $el, card.id)
-
-v-on:touchstart="touchStart(card.id, $event)"
-            v-on:touchend="touchEnd(card.id, $event)"
-            v-on:touchcancel="touchCancel(card.id, $event)"
-            v-on:touchmove="fakeDragover( $event)"
-
--->
 <script>
 	import {reactive, ref, watch} from 'vue';
 	import { useStore } from 'vuex'
     import Card from "./Card.vue";
+	import fakeTouchDragFactory from "../../compatability/fakeTouchDragFactory";
 
 	export default {
 		name: "Hand",
@@ -47,101 +38,58 @@ v-on:touchstart="touchStart(card.id, $event)"
         },
 		setup(props) {
 			const store = useStore();
-			const hoverId = ref(-1);
-			const hoverRight = ref(false);
 
-			const calcPieceWidth = (offsetWidth) => (offsetWidth * 9.5) / 100;
-			const pieceWidth = ref(calcPieceWidth(300));
-            const draw = (e, id) => {
-	            pieceWidth.value = calcPieceWidth(e.offsetWidth);
-	            store.commit('lexGame/pullCard', {id, zone: 'playerHand'});
-            }
+			const hoverId = ref(-500);
+			const hoverRight = ref(false);
+			const dropZone = reactive(store.state.lexGame.gui.dropZone);
+			watch(
+				() => dropZone.count,
+				(count, prevCount)=> {
+					if (dropZone.zone!='hand') {
+						console.log('watched and dropped');
+						hoverId.value = -500;
+					} else {
+						console.log('bubbled up');
+					}
+				}
+			);
 			const dragExit = (msg) => {
-            	console.log('dragExit ' + msg);
-				hoverId.value = -1
+				hoverId.value = -500
 			}
+			let transitioned = true;
             const dragHover = (e, id) => {
-	            hoverId.value = id;
-	            hoverRight.value = (e.offsetX / pieceWidth.value > 0.5);
+            	if (id != hoverId.value) {
+		            transitioned = false;
+		            hoverId.value = id;
+		            setTimeout(()=>transitioned=true, 200);
+                } else if (transitioned) {
+		            transitioned = false;
+	            	hoverRight.value = !hoverRight.value;
+	            	setTimeout(()=>transitioned=true, 600);
+	            }
+
+
             }
+
+			const draw = (id) => {
+				store.commit('lexGame/pullCard', {id, zone: 'playerHand'});
+			}
             const dropCard = () => {
-            	console.log(`drop id now ${hoverId.value}`)
 	            store.commit('lexGame/placeCard', {
 	                isBefore: !hoverRight.value,
                     id: hoverId.value,
                     zone: 'playerHand'
                 });
-	            hoverId.value = -1;
+	            hoverId.value = -500;
 	            return false;
             }
 
-            const dropZone = reactive(store.state.lexGame.gui.dropZone);
-
-            watch(
-                () => dropZone.count,
-                (count, prevCount)=> {
-                	if (dropZone.zone!='hand') {
-                		console.log('watched and dropped');
-		                hoverId.value = -1;
-                    } else {
-                		console.log('bubbled up');
-                    }
-                }
-            );
-
-            const touch = (eventName)=>  (id, event) => {
-            	console.log(`${eventName} ${id}`);
-            	console.log(event);
-            };
-
-            const fakeTouchDrag = () => {
-            	const point =  { x: 0, y: 0 };
-
-            	const _triggerFake = (type) => {
-		            const fakeDragoverEvent = new Event(type, {bubbles: true, cancelable: true});
-		            document.elementFromPoint(point.x, point.y).dispatchEvent(fakeDragoverEvent);
-                }
-                const _updatePoint = (event) => {
-            		if (event.touches && event.touches[0]!=null) {
-			            const {clientX, clientY} = event.touches[0];
-			            point.x = clientX;
-			            point.y = clientY;
-                    }
-                }
-                const fakedrag = (type, event) => {
-            		if (event) {
-			            event.stopPropagation();
-			            event.preventDefault();
-			            event.stopImmediatePropagation();
-			            _updatePoint(event);
-                    }
-	                _triggerFake(type);
-	                return false;
-                }
-                return fakedrag;
-            }
-            const fakedrag = fakeTouchDrag();
 
 
+            const fakedrag = fakeTouchDragFactory();
 
-            const fakeDragover = (event) => {
-                const {clientX, clientY} = event.touches[0];
-	            const fakeDragoverEvent = new Event('dragover', {bubbles: true, cancelable: true});
-	            document.elementFromPoint(clientX, clientY).dispatchEvent(fakeDragoverEvent);
-            }
-            const focusOut = (id, event) => {
-	             console.log(`focusOut ${id}`)
-	             console.log(event);
-            };
-
-
-            //return { hand };
-            return { draw, dragHover, dragExit, dropCard, fakeDragover, focusOut, fakedrag,
-                touchStart: touch('touchStart'),
-	            touchMove: touch('touchMove'),
-	            touchEnd: touch('touchend'),
-	            touchCancel: touch('touchcancel'),
-                pieceWidth, hoverId, hoverRight };
+            return { draw, dragHover, dragExit, dropCard, fakedrag,
+                 hoverId, hoverRight };
         }
 	}
 </script>
@@ -195,13 +143,5 @@ v-on:touchstart="touchStart(card.id, $event)"
     .hoveringLeft {
         margin-left: 9vmin;
     }
-
-    /*.hovering {*/
-    /*    width: 8.5vw;*/
-    /*    height: 8.5vw;*/
-    /*    background-color: yellow;*/
-    /*    margin: 0.5vw;*/
-    /*    padding: 0;*/
-    /*}*/
 
 </style>
