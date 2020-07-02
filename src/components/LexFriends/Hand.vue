@@ -19,7 +19,7 @@
             v-on:touchend="fakedrag('drop', $event)"
             v-on:touchcancel="fakedrag('drop', $event)"
         >
-            <Card :="card" />
+            <Card :="card" :hide="demo" />
         </li>
     </transition-group>
     </div>
@@ -29,14 +29,17 @@
 	import Card from "./Card.vue";
 	import setupPlayCards from "./playCards";
 	import * as g from '../../store/modules/lexGameConstants';
+	import {ref} from 'vue';
 
 	export default {
 		name: "Hand",
 		components: {Card},
 		setup(props) {
 			const playArea =  setupPlayCards(g.ZONE_PLAYER_HAND);
+			const demo = ref(true);
+			setTimeout(()=> demo.value = false, 1000 );
 
-			return playArea;
+			return {...playArea, demo };
 		}
 	}
 </script>
