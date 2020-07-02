@@ -1,12 +1,15 @@
 <!-- no scroll or double tap zoom with v-on:touchmove.stop.prevent v-on:touchstart.stop.prevent -->
 <template>
-<div id="lexFriends" v-on:touchmove.stop.prevent v-on:touchstart.stop.prevent>
+<div id="lexFriends"
+     v-on:touchmove.stop.prevent v-on:touchstart.stop.prevent
+     v-on:drop.stop.prevent="playCard(g.ZONE_OUT_FIELD)" v-on:dragover.prevent v-on:dragenter.prevent
+>
     <Title id="title"/>
     <Words id="words"/>
     <Score id="score"/>
     <ActionArea id="deck" />
-    <Play id="play" v-on:drop.prevent="playCard(g.ZONE_PLAYER_PLAY)" v-on:dragover.prevent v-on:dragenter.prevent />
-    <Hand id="hand" v-on:drop.prevent="playCard(g.ZONE_PLAYER_HAND)" v-on:dragover.prevent v-on:dragenter.prevent />
+    <Play id="play" v-on:drop.stop.prevent="playCard(g.ZONE_PLAYER_PLAY)" v-on:dragover.prevent v-on:dragenter.prevent />
+    <Hand id="hand" v-on:drop.stop.prevent="playCard(g.ZONE_PLAYER_HAND)" v-on:dragover.prevent v-on:dragenter.prevent />
 </div>
 </template>
 <script>
@@ -34,8 +37,8 @@
 	        const store = useStore();
             const playCard = (zone) => {
 	            store.commit(g.COMMIT_DROP_CARD, zone);
+	            if (zone === g.ZONE_OUT_FIELD) store.commit(g.COMMIT_PLACE_CARD);
             }
-            g.ZON
             return { playCard, g };
         }
 	}

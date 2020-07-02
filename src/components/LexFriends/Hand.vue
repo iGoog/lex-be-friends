@@ -1,18 +1,18 @@
 <template>
     <div class="handArea"
          v-on:drop.prevent="dropCard($event)"
-         v-on:dragover.prevent="dragHover($event)"
+         v-on:dragover.stop.prevent="dragHover($event)"
          v-on:dragenter.prevent
     >
     <transition-group class="cardRow" name="fade" tag="ul" >
-        <li v-for="card in playCards" :id="card.id" :key="card.id" class="card"
+        <li v-for="card in playCards" :id="card.id" :key="card.id"
             :class="{
             	hoveringRight: card.id==hoverId && hoverRight,
             	hoveringLeft: card.id==hoverId && !hoverRight
             }"
             draggable="true"
             v-on:dragstart="draw( card.id)"
-            v-on:dragover.prevent="dragHover($event, card.id)"
+            v-on:dragover.stop.prevent="dragHover($event, card.id)"
             v-on:dragleave="dragLeave($event, card.id)"
 
             v-on:touchstart="fakedrag('dragstart', $event)"
@@ -20,7 +20,7 @@
             v-on:touchend="fakedrag('drop', $event)"
             v-on:touchcancel="fakedrag('drop', $event)"
         >
-            <Card :="card" :hide="demo" />
+            <Card class="card" :="card" :hide="demo" />
         </li>
     </transition-group>
     </div>

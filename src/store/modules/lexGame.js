@@ -47,7 +47,7 @@ const state = () => ({
 	},
 	gui : {
 		dropZone: {count: 0, zone: ''},
-		fromZone: {count: 0, zone: ''}
+		startZone: {count: 0, zone: g.ZONE_PLAYER_HAND}
 	}
 });
 
@@ -99,12 +99,14 @@ const mutations = {
 	shuffleHand(state, zone=g.ZONE_PLAYER_HAND) {
 		state.game.stackMap.get(zone).shuffle();
 	},
-	pullCard(state, {id, zone=g.ZONE_PLAYER_HAND}) {
+	pullCard(state, {id, zone=g.ZONE_PLAYER_HAND} = {}) {
 		state.game.stackMap.get(zone).drawById(id, heldCard);
+		state.gui.startZone.zone = zone;
+		state.gui.startZone.count++;
 	},
-	placeCard(state, {isBefore, id, zone=g.ZONE_PLAYER_HAND}) {
+	placeCard(state, {isBefore, id, zone=state.gui.startZone.zone, fromZone = g.ZONE_HELD_CARD}={}) {
 		const hand = state.game.stackMap.get(zone);
-		const cardSelection = state.game.stackMap.get(g.ZONE_HELD_CARD);
+		const cardSelection = state.game.stackMap.get(fromZone);
 		if (id==g.NULL_ID || id == null) {
 			if (isBefore) hand.place(cardSelection, 0);
 			else hand.place(cardSelection);

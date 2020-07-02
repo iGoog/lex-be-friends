@@ -27,6 +27,7 @@ const setupPlayCards = (zone= g.ZONE_PLAYER_HAND,
 	const gutterCheck = (x, vwWidth = 100, cardWidth = 9.5) => {
 		const cardsWidth = vmin((playCards.length+1)*cardWidth);
 		const gutterWidth = (vw(vwWidth) - cardsWidth) / 2;
+		// console.log(`gutterCheck ${x} ${gutterWidth} ${gutterWidth+ cardsWidth}`);
 		return {
 			leftGutter : x < gutterWidth,
 			rightGutter : x > gutterWidth + cardsWidth
@@ -40,10 +41,10 @@ const setupPlayCards = (zone= g.ZONE_PLAYER_HAND,
 			const gutters = gutterCheck(x);
 			if (gutters.leftGutter) {
 				hoverId.value = g.NULL_ID;
-				hoverRight.value = false;
+				hoverRight.value = true;
 			} else if (gutters.rightGutter) {
 				hoverId.value = g.NULL_ID;
-				hoverRight.value = true;
+				hoverRight.value = false;
 			}
 		} else if (id != hoverId.value) {
 			transitioned = false;
@@ -60,9 +61,9 @@ const setupPlayCards = (zone= g.ZONE_PLAYER_HAND,
 		store.commit(g.COMMIT_PULL_CARD, {id, zone});
 	}
 	const dropCard = (event) => {
-		console.log(event);
+		// console.log(`drop id: ${ hoverId.value} isBefore: ${(hoverId.value==g.NULL_ID) ? hoverRight.value : !hoverRight.value} zone: ${zone}`);
 		store.commit(g.COMMIT_PLACE_CARD, {
-			isBefore: !hoverRight.value,
+			isBefore:  (hoverId.value==g.NULL_ID) ? hoverRight.value : !hoverRight.value,
 			id: hoverId.value,
 			zone
 		});
