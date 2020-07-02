@@ -1,6 +1,7 @@
 import socket from '../../network/sock/index'
 import createDeck from "../../model/lexBeFriends/createDeck";
 import DeckStack from "../../model/DeckStack";
+import * as g from './lexGameConstants';
 
 const rawDeck = createDeck();
 const gameDeck = new DeckStack(rawDeck, false, rawDeck.length, (card)=>card.id).shuffle();
@@ -9,11 +10,11 @@ const playerHand = gameDeck.draw(10);
 const heldCard = gameDeck.draw(0,0);
 const playerPlay = gameDeck.draw(0,0);
 const stackMap = new Map();
-stackMap.set('gameDeck', gameDeck);
-stackMap.set('drawPile', drawPile);
-stackMap.set('playerHand', playerHand);
-stackMap.set('playerPlay', playerPlay);
-stackMap.set('heldCard', heldCard);
+stackMap.set(g.ZONE_GAME_DECK, gameDeck);
+stackMap.set(g.ZONE_DRAW_PILE, drawPile);
+stackMap.set(g.ZONE_PLAYER_HAND, playerHand);
+stackMap.set(g.ZONE_PLAYER_PLAY, playerPlay);
+stackMap.set(g.ZONE_HELD_CARD, heldCard);
 
 
 // const game = {
@@ -37,7 +38,8 @@ const state = () => ({
 		stackMap
 	},
 	gui : {
-		dropZone: {count: 0, zone: ''}
+		dropZone: {count: 0, zone: ''},
+		fromZone: {count: 0, zone: ''}
 	}
 });
 
@@ -86,19 +88,19 @@ const mutations = {
 	setConnected(state, connected) {
 		state.connected = connected;
 	},
-	shuffleHand(state) {
-		state.game.stackMap.get('playerHand').shuffle();
+	shuffleHand(state, zone=g.ZONE_PLAYER_HAND) {
+		state.game.stackMap.get(zone).shuffle();
 	},
-	pullCard(state, {id, zone='playerHand'}) {
+	pullCard(state, {id, zone=g.ZONE_PLAYER_HAND}) {
 		state.game.stackMap.get(zone).drawById(id, heldCard);
 	},
-	placeCard(state, {isBefore, id, zone='playerHand'}) {
+	placeCard(state, {isBefore, id, zone=g.ZONE_PLAYER_HAND}) {
 		const hand = state.game.stackMap.get(zone);
-		const cardSelection = state.game.stackMap.get('heldCard');
+		const cardSelection = state.game.stackMap.get(g.ZONE_HELD_CARD);
 		if (isBefore) hand.placeBefore(cardSelection, id);
 		else hand.placeAfter(cardSelection, id);
 	},
-	dropCard(state, zone) {
+	dropCard(state, zone=g.ZONE_PLAYER_HAND) {
 		state.gui.dropZone.zone = zone;
 		state.gui.dropZone.count++;
 	}

@@ -1,0 +1,38 @@
+.cardRow {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    list-style: none;
+    padding: 0px;
+}
+
+.fade-move, .fade-enter-active, .fade-leave-active {
+    transition: all 0.5s cubic-bezier(.55,0,.1,1)
+    /* 0.5s cubic-bezier(.55,0,.1,1);*/
+}
+/* 2. declare enter from and leave to state */
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+    transform: scale(0.0);
+    /*scaleY(0.01) translate(0, 0);*/
+}
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.fade-leave-active {
+    position: absolute;
+}
+.card {
+    width: 8.5vmin;
+    height: 8.5vmin;
+    font-weight: bold;
+    margin: 0.5vmin;
+    padding: 0;
+    cursor: grab;
+}
+
+.hoveringRight {
+    margin-right: 9vmin;
+}
+.hoveringLeft {
+    margin-left: 9vmin;
+}

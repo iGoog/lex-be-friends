@@ -4,9 +4,9 @@
     <Title id="title"/>
     <Words id="words"/>
     <Score id="score"/>
-    <Deck id="deck" v-on:drop.prevent="playCard('deck')" v-on:dragover.prevent v-on:dragenter.prevent />
-    <Play id="play" v-on:drop.prevent="playCard('play')" v-on:dragover.prevent v-on:dragenter.prevent />
-    <Hand id="hand" v-on:drop.prevent="playCard('hand')" v-on:dragover.prevent v-on:dragenter.prevent />
+    <Deck id="deck" />
+    <Play id="play" v-on:drop.prevent="playCard(g.ZONE_PLAYER_PLAY)" v-on:dragover.prevent v-on:dragenter.prevent />
+    <Hand id="hand" v-on:drop.prevent="playCard(g.ZONE_PLAYER_HAND)" v-on:dragover.prevent v-on:dragenter.prevent />
 </div>
 </template>
 <script>
@@ -25,6 +25,7 @@
 	import Hand from "./LexFriends/Hand.vue";
 	import Words from "./LexFriends/Words.vue";
 	import { useStore } from 'vuex';
+	import * as g from '../store/modules/lexGameConstants';
 
 	export default {
 		name: "LexFriends.vue",
@@ -32,9 +33,10 @@
         setup(props) {
 	        const store = useStore();
             const playCard = (zone) => {
-	            store.commit('lexGame/dropCard', zone);
+	            store.commit(g.COMMIT_DROP_CARD, zone);
             }
-            return { playCard };
+            g.ZON
+            return { playCard, g };
         }
 	}
 </script>
