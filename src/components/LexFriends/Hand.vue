@@ -10,7 +10,8 @@
             	hoveringRight: card.id==hoverId && hoverRight,
             	hoveringLeft: card.id==hoverId && !hoverRight
             }"
-            draggable="true" v-on:dragstart="draw( card.id)"
+            draggable="true"
+            v-on:dragstart="draw( card.id)"
             v-on:dragover.prevent="dragHover($event, card.id)"
             v-on:dragleave="dragLeave($event, card.id)"
 
@@ -37,7 +38,7 @@
 		setup(props) {
 			const playArea =  setupPlayCards(g.ZONE_PLAYER_HAND);
 			const demo = ref(true);
-			setTimeout(()=> demo.value = false, 1000 );
+			setTimeout(()=> demo.value = false, 300 );
 
 			return {...playArea, demo };
 		}

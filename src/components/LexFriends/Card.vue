@@ -1,12 +1,14 @@
 <template>
-        <svg :class="{svgFace: showFace, flipAnimate: animate, svgBack : !showFace }"
+        <svg :class="{svgFace: showFace, flipAnimate: animate, svgBack : !showFace && !invisible, svgInvis: invisible }"
              viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-<!--            <rect x="0" y="0" width="100%" height="100%" stroke="darkgrey" stroke-width="3px" fill="transparent"/>-->
             <text v-if="showFace" x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="50" >
                 {{gameChar == 'wild'? '🦄' : gameChar }}
             </text>
             <text v-if="showFace" x="85%" y="15%" dominant-baseline="central" text-anchor="middle" font-size="20" >
                 {{points}}
+            </text>
+            <text v-if="invisText" x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="20" >
+                {{invisText}}
             </text>
         </svg>
 </template>
@@ -20,11 +22,13 @@
 			points: Number,
             gameChar: String,
             id: Number,
-            hide: Boolean
+            hide: Boolean,
+            invisible: Boolean,
+            invisText: String
         },
         setup(props, context) {
 	        const animate = ref(false);
-	        const showFace = ref(!props.hide);
+	        const showFace = ref(!props.hide && !props.invisible);
 
 	        watch (
                 () => props.hide,
@@ -46,26 +50,28 @@
     .svgFace {
         /*background-color: cyan;*/
         background: linear-gradient(0deg,#00C9FF 0%, #92FE9D 100%);
-        width: 100%;
-        height: 100%;
-        border-radius: 4px;
+        border-radius: 0.5vmin;
         box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
         text-transform: uppercase;
 
+    }
+
+    .svgInvis {
+        border-radius: 0.5vmin;
     }
 
     .svgBack {
         background: url("../../assets/cardBack.png");
         background-size: contain;
         transform: rotate(-180deg);
-
+        border-radius: 0.5vmin;
+        box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12);
     }
     .lifted {
         box-shadow: 0 8px 10px -5px rgba(0,0,0,.2),0 16px 24px 2px rgba(0,0,0,.14),0 6px 30px 5px rgba(0,0,0,.12)
     }
 
     .flipAnimate {
-        -webkit-animation: flip-2-hor-top-2 0.5s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
         animation: flip-2-hor-top-2 0.5s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
 
     }

@@ -4,7 +4,7 @@
     <Title id="title"/>
     <Words id="words"/>
     <Score id="score"/>
-    <Deck id="deck" />
+    <ActionArea id="deck" />
     <Play id="play" v-on:drop.prevent="playCard(g.ZONE_PLAYER_PLAY)" v-on:dragover.prevent v-on:dragenter.prevent />
     <Hand id="hand" v-on:drop.prevent="playCard(g.ZONE_PLAYER_HAND)" v-on:dragover.prevent v-on:dragenter.prevent />
 </div>
@@ -20,7 +20,7 @@
 
 	import Title from "./LexFriends/Title.vue";
 	import Score from "./LexFriends/Score.vue";
-	import Deck from "./LexFriends/Deck.vue";
+	import ActionArea from "./LexFriends/ActionArea.vue";
 	import Play from "./LexFriends/Play.vue";
 	import Hand from "./LexFriends/Hand.vue";
 	import Words from "./LexFriends/Words.vue";
@@ -29,7 +29,7 @@
 
 	export default {
 		name: "LexFriends.vue",
-		components: {Words, Hand, Play, Deck, Score, Title},
+		components: {Words, Hand, Play, ActionArea, Score, Title},
         setup(props) {
 	        const store = useStore();
             const playCard = (zone) => {

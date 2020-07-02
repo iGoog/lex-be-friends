@@ -7,17 +7,21 @@ const showFn = (card)=>card.hide=false;
 const idFn = (card)=>card.id;
 const hideFn = (card)=>card.hide=true;
 const rawDeck = createDeck();
-const gameDeck = new DeckStack(rawDeck, rawDeck.length, idFn, hideFn).shuffle();
-const drawPile = gameDeck.draw(1,undefined, null, showFn);
-const playerHand = gameDeck.draw(10,undefined, null, showFn);
-const heldCard = gameDeck.draw(0,0, null, showFn);
-const playerPlay = gameDeck.draw(0,0, null, hideFn);
+const drawPile = new DeckStack(rawDeck, rawDeck.length, idFn, hideFn).shuffle();
+const discardPile = drawPile.draw(1,undefined, null, showFn);
+const playerHand = drawPile.draw(10,undefined, null, showFn);
+const heldCard = drawPile.draw(0,0, null, showFn);
+const heldDiscard = drawPile.draw(0,0, null, showFn);
+const playerPlay = drawPile.draw(0,0, null, showFn);
 const stackMap = new Map();
-stackMap.set(g.ZONE_GAME_DECK, gameDeck);
+
 stackMap.set(g.ZONE_DRAW_PILE, drawPile);
+stackMap.set(g.ZONE_DISCARD_PILE, discardPile);
 stackMap.set(g.ZONE_PLAYER_HAND, playerHand);
 stackMap.set(g.ZONE_PLAYER_PLAY, playerPlay);
 stackMap.set(g.ZONE_HELD_CARD, heldCard);
+stackMap.set(g.ZONE_HELD_DISCARD, heldDiscard);
+
 
 
 // const game = {
@@ -33,11 +37,12 @@ const state = () => ({
 	channelName: '',
 	connected: false,
 	game : {
-		drawPile: gameDeck.cards,
-		discardPile: drawPile.cards,
+		drawPile: drawPile.cards,
+		discardPile: discardPile.cards,
 		playerHand : playerHand.cards,
 		heldCard: heldCard.cards,
 		playerPlay: playerPlay.cards,
+		heldDiscard: heldDiscard.cards,
 		stackMap
 	},
 	gui : {

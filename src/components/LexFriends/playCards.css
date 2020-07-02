@@ -1,5 +1,5 @@
 .cardRow {
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-content: center;
     list-style: none;
@@ -7,13 +7,15 @@
 }
 
 .fade-move, .fade-enter-active, .fade-leave-active {
-    transition: all 0.5s cubic-bezier(.55,0,.1,1)
+    transition: all 1s cubic-bezier(0.165, 0.840, 0.440, 1.000) ;
     /* 0.5s cubic-bezier(.55,0,.1,1);*/
 }
 /* 2. declare enter from and leave to state */
 .fade-enter-from, .fade-leave-to {
     opacity: 0;
-    transform: scale(0.0);
+    /*transform: scale(0.0);*/
+    transform: scale(2);
+    filter: blur(4px)
     /*scaleY(0.01) translate(0, 0);*/
 }
 /* 3. ensure leaving items are taken out of layout flow so that moving
@@ -28,6 +30,18 @@
     margin: 0.5vmin;
     padding: 0;
     cursor: grab;
+}
+.cardStacked {
+    margin: 0.35vmin -8.25vmin 0.5vmin 0;
+}
+.dropCardArea {
+    width: 8.5vmin;
+    height: 8.5vmin;
+    font-weight: bold;
+    margin: 0.5vmin;
+    padding: 0;
+    border: dashed black 0.25vmin;
+    border-radius: 0.5vmin;
 }
 
 .hoveringRight {
