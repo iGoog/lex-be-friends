@@ -2,7 +2,8 @@ const fakeTouchDragFactory = () => {
 	const point =  { x: 0, y: 0 };
 
 	const _triggerFake = (type) => {
-		const fakeDragoverEvent = new Event(type, {bubbles: true, cancelable: true});
+		const fakeDragoverEvent = new MouseEvent(type,
+			{ clientX: point.x, clientY: point.y, bubbles: true, cancelable: true});
 		document.elementFromPoint(point.x, point.y).dispatchEvent(fakeDragoverEvent);
 	}
 	const _updatePoint = (event) => {

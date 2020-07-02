@@ -97,13 +97,20 @@ const mutations = {
 	placeCard(state, {isBefore, id, zone=g.ZONE_PLAYER_HAND}) {
 		const hand = state.game.stackMap.get(zone);
 		const cardSelection = state.game.stackMap.get(g.ZONE_HELD_CARD);
-		if (isBefore) hand.placeBefore(cardSelection, id);
-		else hand.placeAfter(cardSelection, id);
+		if (id==g.NULL_ID || id == null) {
+			if (isBefore) hand.place(cardSelection, 0);
+			else hand.place(cardSelection);
+		} else {
+			if (isBefore) hand.placeBefore(cardSelection, id);
+			else hand.placeAfter(cardSelection, id);
+		}
+
 	},
 	dropCard(state, zone=g.ZONE_PLAYER_HAND) {
 		state.gui.dropZone.zone = zone;
 		state.gui.dropZone.count++;
-	}
+	},
+
 
 
 };

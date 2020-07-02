@@ -1,6 +1,8 @@
 <template>
     <div class="handArea"
-         v-on:drop.prevent="dropCard()" v-on:dragover.prevent v-on:dragenter.prevent
+         v-on:drop.prevent="dropCard($event)"
+         v-on:dragover.prevent="dragHover($event)"
+         v-on:dragenter.prevent
     >
     <transition-group class="cardRow" name="fade" tag="ul" >
         <li v-for="card in playCards" :id="card.id" :key="card.id" class="card"
@@ -10,6 +12,7 @@
             }"
             draggable="true" v-on:dragstart="draw( card.id)"
             v-on:dragover.prevent="dragHover($event, card.id)"
+            v-on:dragleave="dragLeave($event, card.id)"
 
             v-on:touchstart="fakedrag('dragstart', $event)"
             v-on:touchmove="fakedrag( 'dragover', $event)"
@@ -39,6 +42,9 @@
 </script>
 
 <style scoped>
+    .aroundCard {
+        width: 30px;
+    }
 
     .handArea {
         background-color: silver;
