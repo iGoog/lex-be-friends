@@ -5,7 +5,7 @@
          v-on:dragenter.prevent
     >
     <transition-group class="cardRow" name="fade" tag="ul" >
-        <li v-for="card in playCards" :id="card.id" :key="card.id"
+        <li v-for="card in playCards" :id="card.id" :key="card.id" class="card"
             :class="{
             	hoveringRight: card.id==hoverId && hoverRight,
             	hoveringLeft: card.id==hoverId && !hoverRight
@@ -15,12 +15,9 @@
             v-on:dragover.stop.prevent="dragHover($event, card.id)"
             v-on:dragleave="dragLeave($event, card.id)"
 
-            v-on:touchstart="fakedrag('dragstart', $event)"
-            v-on:touchmove="fakedrag( 'dragover', $event)"
-            v-on:touchend="fakedrag('drop', $event)"
-            v-on:touchcancel="fakedrag('drop', $event)"
+
         >
-            <Card class="card" :="card" :hide="demo" />
+            <Card  :="card" :hide="demo" />
         </li>
     </transition-group>
     </div>

@@ -1,6 +1,11 @@
 <template>
         <svg :class="{svgFace: showFace, flipAnimate: animate, svgBack : !showFace && !invisible, svgInvis: invisible }"
-             viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+             viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+             v-on:touchstart="fakedrag('dragstart', $event)"
+             v-on:touchmove="fakedrag( 'dragover', $event)"
+             v-on:touchend="fakedrag('drop', $event)"
+             v-on:touchcancel="fakedrag('drop', $event)"
+        >
             <text v-if="showFace" x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="50" >
                 {{gameChar == 'wild'? '🦄' : gameChar }}
             </text>
@@ -15,6 +20,7 @@
 
 <script>
     import { ref, watch } from 'vue';
+    import fakeTouchDragFactory from "../../util/fakeTouchDragFactory";
 
 	export default {
 		name: "Card",
@@ -40,7 +46,8 @@
                 }
             );
 
-            return { animate, showFace };
+	        const fakedrag = fakeTouchDragFactory();
+            return { animate, showFace, fakedrag };
         }
 	}
 </script>

@@ -79,6 +79,7 @@
     }
     #play {
         grid-area: play;
+        /*height: 12vmin;*/
     }
     #hand {
         grid-area: hand;

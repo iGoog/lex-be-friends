@@ -14,11 +14,6 @@
                 v-on:dragstart="draw( card.id)"
                 v-on:dragover.prevent="dragHover($event, card.id)"
                 v-on:dragleave="dragLeave($event, card.id)"
-
-                v-on:touchstart="fakedrag('dragstart', $event)"
-                v-on:touchmove="fakedrag( 'dragover', $event)"
-                v-on:touchend="fakedrag('drop', $event)"
-                v-on:touchcancel="fakedrag('drop', $event)"
             >
                 <Card class="card" :="card" />
             </li>

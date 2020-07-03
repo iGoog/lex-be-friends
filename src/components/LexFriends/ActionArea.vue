@@ -2,40 +2,48 @@
     <div class="actionArea">
         <span class="drawPile">
             <ul class="cardRow">
-                <li v-for="card in topDrawPile" >
-                    <Card  class="card cardStacked" :="card" />
+                <li v-for="card in topDrawPile" class="card cardStacked" >
+                    <Card   :="card" />
                 </li>
-                <li v-if="topDraw!=null" >
-                    <Card class="card" :="topDraw" />
+                <li v-if="topDraw!=null" class="card">
+                    <Card  :="topDraw" />
                 </li>
             </ul>
         </span>
 
         <span class="discardPile">
             <ul class="cardRow">
-                <li v-for="card in topDiscardPile">
-                    <Card  class="card cardStacked"  :="card" />
+                <li v-for="card in topDiscardPile" class="card cardStacked">
+                    <Card    :="card" />
                 </li>
-                <li v-if="topDiscard!=null" >
-                    <Card class="card" :="topDiscard" />
+                <li v-if="topDiscard!=null" class="card" >
+                    <Card  :="topDiscard" />
                 </li>
             </ul>
         </span>
 
-        <span class="discardArea">
-            <ul class="cardRow"
-                v-on:drop.prevent="discardAreaDrop()"
-                v-on:dragover.prevent
-                v-on:dragenter.prevent
-            >
-                <li >
-                    <Card class="dropCardArea" :invisible="true" :invisText="'Discard'" />
-                    <Card class="card" v-if="heldDiscard.length > 0" :="heldDiscard[0]" />
-
+        <div class="discardGrid"
+              v-on:drop.prevent="discardAreaDrop()"
+              v-on:dragover.prevent
+              v-on:dragenter.prevent>
+            <ul class="discardGridBottom">
+                <li class="dropCardArea" :key="-999">
+                    <Card :invisible="true" :invisText="'Discard'" />
                 </li>
             </ul>
+            <transition-group name="fade" tag="ul">
 
-        </span>
+                <li v-for="card in heldDiscard" :key="card.id" class="card"
+                    draggable="true"
+                    v-on:dragstart="discardAreaDraw()"
+                     v-on:dragover.prevent
+                     v-on:dragenter.prevent
+                >
+                    <Card :="card" />
+                </li>
+            </transition-group>
+
+        </div>
 
     </div>
 </template>
@@ -73,10 +81,15 @@
 	            });
             }
 
+            const discardAreaDraw = ( ) => {
+            	console.log('discardAreaDraw');
+            	store.commit(g.COMMIT_PULL_CARD, {id: heldDiscard[0].id ,zone: g.ZONE_HELD_DISCARD});
+            }
+
 
 			return {
             	topDrawPile, topDraw, topDiscardPile, topDiscard, heldDiscard,
-				discardAreaDrop
+				discardAreaDrop, discardAreaDraw
             }
         }
 	}
@@ -87,6 +100,22 @@
         height: 100%;
         width: 100%;
         background-color: cornflowerblue;
+    }
+
+    .discardGrid {
+        display: inline-grid;
+        width: 10vmin;
+        clear: none;
+    }
+    .discardGrid ul {
+        grid-column: 1;
+        grid-row: 1;
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+    }
+    .discardGridBottom {
+        z-index: -1;
     }
 
 </style>

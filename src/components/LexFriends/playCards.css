@@ -4,6 +4,14 @@
     align-content: center;
     list-style: none;
     padding: 0px;
+    padding-inline-start: 0px;
+}
+
+.fixedRow {
+    display: inline-flex;
+    list-style: none;
+    padding-inline: 0px;
+    padding: 0px 5vmin 0px 5vmin;
 }
 
 .fade-move, .fade-enter-active, .fade-leave-active {
@@ -43,7 +51,6 @@
     border: dashed black 0.25vmin;
     border-radius: 0.5vmin;
 }
-
 .hoveringRight {
     margin-right: 9vmin;
 }
