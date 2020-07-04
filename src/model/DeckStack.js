@@ -99,5 +99,10 @@ export default class DeckStack {
 		return this.draw(cardsToDraw, position, targetStack, alterFn);
 	}
 
+	stash(store = []) {
+		store.splice(store.length, 0, this.draw(this.cards.length, 0));
+		return store;
+	}
+
 
 }

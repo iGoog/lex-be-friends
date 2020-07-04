@@ -1,6 +1,6 @@
 <template>
     <div class="titleArea">
-        <h1></h1>
+        <h1><Doomii :doom="doom"></Doomii></h1>
     </div>
 </template>
 
@@ -12,7 +12,7 @@
 		name: "Title",
 		components: {Doomii},
         data: vm => ({
-			doom: DOOM.BANDAGE
+			doom: DOOM.PIRATE
         })
 	}
 </script>

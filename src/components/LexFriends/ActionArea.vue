@@ -5,8 +5,8 @@
                 <li v-for="card in topDrawPile" class="card cardStacked" >
                     <Card   :="card" />
                 </li>
-                <li v-if="topDraw!=null" class="card">
-                    <Card  :="topDraw" />
+                <li @click="clickTopDraw()" v-if="topDraw!=null" class="card" :class="{wobbleRight: (heldDiscard.length>0)}">
+                    <Card  :="topDraw"  />
                 </li>
             </ul>
         </span>
@@ -16,13 +16,13 @@
                 <li v-for="card in topDiscardPile" class="card cardStacked">
                     <Card    :="card" />
                 </li>
-                <li v-if="topDiscard!=null" class="card" >
+                <li @click="clickTopDiscard()" v-if="topDiscard!=null" class="card" :class="{wobbleRight2: (heldDiscard.length>0)}" >
                     <Card  :="topDiscard" />
                 </li>
             </ul>
         </span>
 
-        <div class="discardGrid"
+        <span class="discardGrid"
               v-on:drop.prevent="discardAreaDrop()"
               v-on:dragover.prevent
               v-on:dragenter.prevent>
@@ -43,7 +43,15 @@
                 </li>
             </transition-group>
 
-        </div>
+        </span>
+
+        <span class="actionButtons">
+            <ul class="cardRow">
+                <li class="card" @click="clickSubmit()">
+                    <CardButton :="{content: '☝'}"></CardButton>
+                </li>
+            </ul>
+        </span>
 
     </div>
 </template>
@@ -53,11 +61,12 @@
     import {useStore} from 'vuex';
     import {reactive, computed} from 'vue';
     import Card from "./Card.vue";
+	import CardButton from "./CardButton.vue";
 	import * as g from "../../store/modules/lexGameConstants";
 
 	export default {
 		name: "ActionArea",
-		components: {Card},
+		components: {Card, CardButton},
 		setup(props) {
 			const store = useStore();
 
@@ -86,10 +95,30 @@
             	store.commit(g.COMMIT_PULL_CARD, {id: heldDiscard[0].id ,zone: g.ZONE_HELD_DISCARD});
             }
 
+            const clickTopDraw = () => {
+            	if (heldDiscard.length>0) {
+                    store.dispatch(g.DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: g.ZONE_DRAW_PILE});
+                }
+            }
+
+			const clickTopDiscard = () => {
+				if (heldDiscard.length>0) {
+					store.dispatch(g.DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: g.ZONE_DISCARD_PILE});
+				}
+			}
+
+			const clickSubmit = () => {
+				const validLength = store.state.lexGame.game.playerPlay.length >= 2;
+				if (validLength) {
+                    store.dispatch(g.DISPATCH_TURN_PLAY);
+                }
+            }
+
 
 			return {
             	topDrawPile, topDraw, topDiscardPile, topDiscard, heldDiscard,
-				discardAreaDrop, discardAreaDraw
+				discardAreaDrop, discardAreaDraw, clickTopDraw, clickTopDiscard,
+				clickSubmit
             }
         }
 	}
@@ -116,6 +145,43 @@
     }
     .discardGridBottom {
         z-index: -1;
+    }
+
+    .drawPile {
+        margin-right: 9vmin;
+    }
+
+    .actionButtons {
+        margin-left: 9vmin;
+    }
+
+    .wobbleRight {
+        animation: wobbleRightAnimation 5s infinite both;
+    }
+    .wobbleRight2 {
+        animation: wobbleRightAnimation 5s 0.5s infinite both;
+    }
+
+    @keyframes wobbleRightAnimation {
+        0%,16%, 100% {
+            transform: translateY(0) rotate(0);
+            transform-origin: 50% 50%;
+        }
+        2.4% {
+            transform: translateY(-4vmin) rotate(6deg);
+        }
+        4.8% {
+            transform: translateY(2vmin) rotate(-6deg);
+        }
+        7.2% {
+            transform: translateY(-2vmin) rotate(3.6deg);
+        }
+        9.6% {
+            transform: translateY(1.2vmin) rotate(-2.4deg);
+        }
+        12% {
+            transform: translateY(-0.8vmin) rotate(1.2deg);
+        }
     }
 
 </style>

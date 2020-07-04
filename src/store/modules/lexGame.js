@@ -22,7 +22,7 @@ stackMap.set(g.ZONE_PLAYER_PLAY, playerPlay);
 stackMap.set(g.ZONE_HELD_CARD, heldCard);
 stackMap.set(g.ZONE_HELD_DISCARD, heldDiscard);
 
-
+const playField = [];
 
 // const game = {
 // 	drawPile: gameDeck.cards,
@@ -43,7 +43,8 @@ const state = () => ({
 		heldCard: heldCard.cards,
 		playerPlay: playerPlay.cards,
 		heldDiscard: heldDiscard.cards,
-		stackMap
+		stackMap,
+		playField
 	},
 	gui : {
 		dropZone: {count: 0, zone: ''},
@@ -56,6 +57,18 @@ const getters = {
 };
 
 const actions = {
+
+	turnDrawFromZone({commit, state}, {fromZone=g.ZONE_DISCARD_PILE}={}) {
+		if (fromZone===g.ZONE_DRAW_PILE) commit('flipCards', {zone:fromZone});
+		setTimeout( ()=> {
+			commit('pullCard', {zone:fromZone, toZone:g.ZONE_PLAYER_HAND});
+			commit('placeCards', {zone:g.ZONE_DISCARD_PILE, fromZone: g.ZONE_HELD_DISCARD});
+		}, 700 );
+
+	},
+	turnPlay({commit, state}) {
+		commit('playToBoard');
+	},
 	connectSocket({commit, state}, options) {
 		(async () => {
 			let result = await socket.invoke('customProc', {foo: 'bar'});
@@ -99,12 +112,28 @@ const mutations = {
 	shuffleHand(state, zone=g.ZONE_PLAYER_HAND) {
 		state.game.stackMap.get(zone).shuffle();
 	},
-	pullCard(state, {id, zone=g.ZONE_PLAYER_HAND} = {}) {
-		state.game.stackMap.get(zone).drawById(id, heldCard);
-		state.gui.startZone.zone = zone;
-		state.gui.startZone.count++;
+	flipCards(state, {zone=g.ZONE_DRAW_PILE, quantity=1}={}) {
+		const stack = state.game.stackMap.get(zone).cards;
+		for (let i=0; i < quantity && i < stack.length; i++) {
+			console.log(stack[stack.length-1-i].hide);
+			stack[stack.length-1-i].hide = !stack[stack.length-1-i].hide;
+			console.log(stack[stack.length-1-i].hide);
+		}
 	},
-	placeCard(state, {isBefore, id, zone=state.gui.startZone.zone, fromZone = g.ZONE_HELD_CARD}={}) {
+	pullCard(state, {id, zone=g.ZONE_PLAYER_HAND, toZone = g.ZONE_HELD_CARD} = {}) {
+		const targetZone = state.game.stackMap.get(toZone);
+		if (id==null) {
+			state.game.stackMap.get(zone).draw(1,null, targetZone);
+		} else {
+			state.game.stackMap.get(zone).drawById(id, targetZone);
+		}
+		if (toZone==g.ZONE_HELD_CARD) {
+			state.gui.startZone.zone = zone;
+			state.gui.startZone.count++;
+		}
+
+	},
+	placeCards(state, {isBefore, id, zone=state.gui.startZone.zone, fromZone = g.ZONE_HELD_CARD}={}) {
 		const hand = state.game.stackMap.get(zone);
 		const cardSelection = state.game.stackMap.get(fromZone);
 		if (id==g.NULL_ID || id == null) {
@@ -120,6 +149,11 @@ const mutations = {
 		state.gui.dropZone.zone = zone;
 		state.gui.dropZone.count++;
 	},
+	playToBoard(state) {
+		state.game.stackMap
+			.get(g.ZONE_PLAYER_PLAY)
+			.stash(state.game.playField);
+	}
 
 
 
