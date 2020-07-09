@@ -1,6 +1,6 @@
 <template>
     <div class="wordsArea">
-            <div v-for="(word, i ) in playedWords" :key="i">
+            <div class="fullWord" v-for="(word, i ) in playedWords" :key="i">
                 <ul class="wordRow">
                     <li v-for="card in word.cards" :key="card.id">
                         <Card :="card"/>
@@ -20,6 +20,7 @@
 	import fakeTouchDragFactory from "../../util/fakeTouchDragFactory";
 	import Card from "./Card.vue";
 	import CardButton from "./CardButton.vue";
+	import {COMMIT_EDIT_FROM_BOARD} from "../../store/modules/lexGameConstants";
 
 	export default {
 		name: "Words",
@@ -27,11 +28,12 @@
 		setup() {
 			const store = useStore();
 			const playedWords = reactive(store.state.lexGame.game.playField);
-			const clickEdit = (editIndex) => {
 
+			const clickEdit = (editIndex) => {
+                store.commit(COMMIT_EDIT_FROM_BOARD, {editIndex});
             }
 
-			return { playedWords };
+			return { playedWords, clickEdit };
         }
 	}
 </script>
@@ -41,6 +43,10 @@
     width: 100%;
     height: 100%;
     background-color: blanchedalmond;
+    display: inline-flex;
+}
+.wordsArea .fullWord {
+    margin: 0.2vmin 1vmin 0.2vmin 1vmin;
 }
 .wordRow {
     display: inline-flex;

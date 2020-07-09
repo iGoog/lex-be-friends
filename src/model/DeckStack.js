@@ -78,7 +78,7 @@ export default class DeckStack {
 	 * @param targetStack - (optional) where to draw to.
 	 * @returns {DeckStack} - the targetStack or a new deckStack
 	 */
-	draw(cardsToDraw=1, position, targetStack, alterFn) {
+	draw(cardsToDraw=1, position, targetStack, alterFn=null) {
 		const { cards } = this;
 		if (cardsToDraw > cards.length) {
 			cardsToDraw= cards.length;
@@ -99,6 +99,29 @@ export default class DeckStack {
 		return this.draw(cardsToDraw, position, targetStack, alterFn);
 	}
 
+	clearOrder() {
+		this.cards.forEach(card => {
+			card.order = null;
+		});
+		return this;
+	}
+
+	validateOrder() {
+		const { cards } = this;
+		let spot = 0;
+		let valid = true;
+		cards.forEach(card => {
+			if (card.order !=null) {
+				if (card.order >= spot) spot = card.order;
+				else {
+					valid = false;
+					card.status = 'orderError'
+				}
+			}
+
+		});
+		return valid;
+	}
 	stash(store = []) {
 		store.splice(store.length, 0, this.draw(this.cards.length, 0));
 		return store;

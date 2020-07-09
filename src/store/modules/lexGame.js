@@ -44,7 +44,8 @@ const state = () => ({
 		playerPlay: playerPlay.cards,
 		heldDiscard: heldDiscard.cards,
 		stackMap,
-		playField
+		playField,
+		isEditing: false
 	},
 	gui : {
 		dropZone: {count: 0, zone: ''},
@@ -150,11 +151,30 @@ const mutations = {
 		state.gui.dropZone.count++;
 	},
 	playToBoard(state) {
-		state.game.stackMap
-			.get(g.ZONE_PLAYER_PLAY)
-			.stash(state.game.playField);
-	}
+		const toPlayCards = state.game.stackMap.get(g.ZONE_PLAYER_PLAY);
+		if (!state.game.isEditing || toPlayCards.validateOrder() ) {
+			toPlayCards.clearOrder();
+			toPlayCards.stash(state.game.playField);
+			//TODO: clear all order
+			state.game.isEditing = false;
+		}
 
+	},
+	editFromBoard(state, {editIndex=0}={}) {
+		if (playField.length <= editIndex) throw new Error('Unexpected board index');
+		const playedWord = playField.splice(editIndex, 1)[0];
+		console.log(playField.length);
+		const playerPlay = state.game.stackMap.get(g.ZONE_PLAYER_PLAY);
+		const playerHand = state.game.stackMap.get(g.ZONE_PLAYER_HAND);
+		const heldCard = state.game.stackMap.get(g.ZONE_HELD_CARD);
+		playerHand.place(playerPlay);
+		playerHand.place(heldCard);
+		for (let i=0; i <playedWord.cards.length; i++) {
+			playedWord.cards[i].order = i+1;
+		}
+		state.game.isEditing = true;
+		playerPlay.place(playedWord);
+	}
 
 
 };

@@ -15,6 +15,9 @@
             <text v-if="invisText" x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="20" >
                 {{invisText}}
             </text>
+            <text v-if="order" x="15%" y="85%" dominant-baseline="central" text-anchor="middle" font-size="20" >
+                {{order}}
+            </text>
         </svg>
 </template>
 
@@ -30,7 +33,8 @@
             id: Number,
             hide: Boolean,
             invisible: Boolean,
-            invisText: String
+            invisText: String,
+            order: Number
         },
         setup(props, context) {
 	        const flipAnimate = ref(false);
