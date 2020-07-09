@@ -9,11 +9,11 @@ const setupPlayCards = (zone= g.ZONE_PLAYER_HAND,
                         }) => {
 	const store = useStore();
 
-	const playCards = reactive(store.state.lexGame.game[zone]);
-	const heldCard = reactive(store.state.lexGame.game.heldCard);
+	const playCards = reactive(store.state.lexGame.playerStacks[zone].cards);
+	const heldCard = reactive(store.state.lexGame.playerStacks.heldCard.cards);
 	const hoverId = ref(g.NULL_ID);
 	const hoverRight = ref(false);
-	const dropZone = reactive(store.state.lexGame.gui.dropZone);
+	const dropZone = reactive(store.state.lexGame.mode.dropZone);
 	watch(
 		() => dropZone.count,
 		(count, prevCount)=> {

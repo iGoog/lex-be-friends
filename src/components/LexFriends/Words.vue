@@ -27,7 +27,7 @@
 		components: {CardButton, Card},
 		setup() {
 			const store = useStore();
-			const playedWords = reactive(store.state.lexGame.game.playField);
+			const playedWords = reactive(store.state.lexGame.playFieldStacks);
 
 			const clickEdit = (editIndex) => {
                 store.commit(COMMIT_EDIT_FROM_BOARD, {editIndex});

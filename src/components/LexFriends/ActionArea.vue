@@ -70,15 +70,15 @@
 		setup(props) {
 			const store = useStore();
 
-			const drawPile = reactive(store.state.lexGame.game.drawPile);
+			const drawPile = reactive(store.state.lexGame.playerStacks.drawPile.cards);
 			const topDrawPile = computed(() => drawPile.slice(-5, -1));
 			const topDraw = computed(() => drawPile.length > 0 ? drawPile[drawPile.length-1] : null);
 
-			const discardPile = reactive(store.state.lexGame.game.discardPile);
+			const discardPile = reactive(store.state.lexGame.playerStacks.discardPile.cards);
 			const topDiscardPile = computed(() => discardPile.slice(-5, -1).reverse());
 			const topDiscard = computed(() => discardPile.length > 0 ? discardPile[discardPile.length-1] : null);
 
-			const heldDiscard = reactive(store.state.lexGame.game.heldDiscard);
+			const heldDiscard = reactive(store.state.lexGame.playerStacks.heldDiscard.cards);
 
             const discardAreaDrop = () => {
             	if (heldDiscard.length > 0) store.commit(g.COMMIT_PLACE_CARD, {
@@ -108,7 +108,7 @@
 			}
 
 			const clickSubmit = () => {
-				const validLength = store.state.lexGame.game.playerPlay.length >= 2;
+				const validLength = store.state.lexGame.playerStacks.playerPlay.cards.length >= 2;
 				if (validLength) {
                     store.dispatch(g.DISPATCH_TURN_PLAY);
                 }
