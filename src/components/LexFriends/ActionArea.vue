@@ -96,9 +96,7 @@
             }
 
             const clickTopDraw = () => {
-            	if (heldDiscard.length>0) {
-                    store.dispatch(g.DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: g.ZONE_DRAW_PILE});
-                }
+            	store.dispatch(g.DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: g.ZONE_DRAW_PILE});
             }
 
 			const clickTopDiscard = () => {
