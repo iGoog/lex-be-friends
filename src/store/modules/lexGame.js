@@ -96,9 +96,7 @@ const mutations = {
 	flipCards(state, {zone=g.ZONE_DRAW_PILE, quantity=1}={}) {
 		const stack = state.playerStacks[zone].cards;
 		for (let i=0; i < quantity && i < stack.length; i++) {
-			console.log(stack[stack.length-1-i].hide);
 			stack[stack.length-1-i].hide = !stack[stack.length-1-i].hide;
-			console.log(stack[stack.length-1-i].hide);
 		}
 	},
 	pullCard(state, {id, zone=g.ZONE_PLAYER_HAND, toZone = g.ZONE_HELD_CARD} = {}) {
@@ -131,16 +129,20 @@ const mutations = {
 		state.mode.dropZone.count++;
 	},
 	playToBoard(state) {
-		const toPlayCards = state.playerStacks[g.ZONE_PLAYER_PLAY] ;
+		const toPlayCards = state.playerStacks.playerPlay ;
 		if (!state.mode.isEditing || toPlayCards.validateOrder() ) {
-			toPlayCards.clearOrder();
+			for ( const [,stack] of Object.entries(state.playerStacks)) {
+				stack.clearOrder();
+			}
 			toPlayCards.stash(state.playFieldStacks);
-			//TODO: clear all order
+
+
 			state.mode.isEditing = false;
 		}
 
 	},
 	editFromBoard(state, {editIndex=0}={}) {
+		if (state.mode.isEditing) return;
 		if (state.playFieldStacks.length <= editIndex) throw new Error('Unexpected board index');
 		const playedWord = state.playFieldStacks.splice(editIndex, 1)[0];
 		const {playerPlay, playerHand, heldCard } = state.playerStacks;
