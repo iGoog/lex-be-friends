@@ -56,13 +56,13 @@
         width: 100vw;
         height: 88vh;
         grid-template-areas:
-                "title score"
-                "words score"
+                "score title "
+                "score words "
                 "deck  deck"
                 "play  play"
                 "hand  hand";
         grid-template-rows: 1fr 8fr 2fr 2fr 2fr;
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 1fr 3fr ;
 
     }
     #title {
