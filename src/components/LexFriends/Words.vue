@@ -1,5 +1,5 @@
 <template>
-    <div class="wordsArea">
+    <div class="wordsArea"><div class="flex">
             <div class="fullWord" v-for="(word, i ) in playedWords" :key="i">
                 <ul class="wordRow">
                     <li v-for="card in word.cards" :key="card.id">
@@ -11,7 +11,7 @@
                 </ul>
             </div>
 
-    </div>
+    </div></div>
 </template>
 
 <script>
@@ -43,10 +43,16 @@
     width: 100%;
     height: 100%;
     background-color: blanchedalmond;
-    display: inline-flex;
+    text-align: left;
 }
-.wordsArea .fullWord {
-    margin: 0.2vmin 1vmin 0.2vmin 1vmin;
+.flex {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.flex .fullWord {
+    margin: 0.2vmin 1vmin 0vmin 1vmin;
 }
 .wordRow {
     display: inline-flex;
@@ -63,4 +69,8 @@
     padding: 0;
 
 }
+    ul {
+        margin-block-start: 1vmin;
+        margin-block-end: 0em;
+    }
 </style>
