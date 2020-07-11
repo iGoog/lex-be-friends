@@ -1,7 +1,15 @@
 import socket from '../../network/sock/index'
 import createDeck from "../../model/lexBeFriends/createDeck";
 import DeckStack from "../../model/DeckStack";
-import * as g from './lexGameConstants';
+import {
+	NULL_ID,
+	stackGrabber,
+	ZONE_DISCARD_PILE,
+	ZONE_DRAW_PILE,
+	ZONE_HELD_DISCARD,
+	ZONE_PLAYER_HAND,
+	ZONE_HELD_CARD
+} from './lexGameConstants';
 
 const showFn = (card)=>card.hide=false;
 const idFn = (card)=>card.id;
@@ -16,19 +24,25 @@ const state = () => {
 	const heldDiscard = drawPile.draw(0,0, null, showFn);
 	const playerPlay = drawPile.draw(0,0, null, showFn);
 	return {
+		secret: '',
 		message: 'silence',
 		channel: '',
 		channelName: '',
 		connected: false,
 		playerStacks : {
-			drawPile, discardPile, playerHand,
-			heldCard, playerPlay, heldDiscard,
+			playerHand, heldCard, playerPlay, heldDiscard,
 		},
-		playFieldStacks : [],
+		players : [
+			{ emojii: '🏴‍☠️', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '', sharedSecret: ''}
+		],
+		table : {
+			playFieldStacks : [],
+			drawPile, discardPile,
+		},
 		mode : {
 			isEditing: false,
 			dropZone: {count: 0, zone: ''},
-			startZone: {count: 0, zone: g.ZONE_PLAYER_HAND}
+			startZone: {count: 0, zone: ZONE_PLAYER_HAND}
 		}
 	};
 };
@@ -39,11 +53,11 @@ const getters = {
 
 const actions = {
 
-	turnDrawFromZone({commit, state}, {fromZone=g.ZONE_DISCARD_PILE}={}) {
-		if (fromZone===g.ZONE_DRAW_PILE) commit('flipCards', {zone:fromZone});
+	turnDrawFromZone({commit, state}, {fromZone=ZONE_DISCARD_PILE}={}) {
+		if (fromZone===ZONE_DRAW_PILE) commit('flipCards', {zone:fromZone});
 		setTimeout( ()=> {
-			commit('pullCard', {zone:fromZone, toZone:g.ZONE_PLAYER_HAND});
-			commit('placeCards', {zone:g.ZONE_DISCARD_PILE, fromZone: g.ZONE_HELD_DISCARD});
+			commit('pullCard', {zone:fromZone, toZone:ZONE_PLAYER_HAND});
+			commit('placeCards', {zone:ZONE_DISCARD_PILE, fromZone: ZONE_HELD_DISCARD});
 		}, 700 );
 
 	},
@@ -90,32 +104,32 @@ const mutations = {
 	setConnected(state, connected) {
 		state.connected = connected;
 	},
-	shuffle(state, zone=g.ZONE_PLAYER_HAND) {
-		state.playerStacks[zone].shuffle();
+	shuffle(state, zone=ZONE_PLAYER_HAND) {
+		stackGrabber(state, zone).shuffle();
 	},
-	flipCards(state, {zone=g.ZONE_DRAW_PILE, quantity=1}={}) {
+	flipCards(state, {zone=ZONE_DRAW_PILE, quantity=1}={}) {
 		const stack = state.playerStacks[zone].cards;
 		for (let i=0; i < quantity && i < stack.length; i++) {
 			stack[stack.length-1-i].hide = !stack[stack.length-1-i].hide;
 		}
 	},
-	pullCard(state, {id, zone=g.ZONE_PLAYER_HAND, toZone = g.ZONE_HELD_CARD} = {}) {
-		const targetZone = state.playerStacks[toZone];
+	pullCard(state, {id, zone=ZONE_PLAYER_HAND, toZone = ZONE_HELD_CARD} = {}) {
+		const targetZone = stackGrabber(state, toZone);
 		if (id==null) {
-			state.playerStacks[zone].draw(1,null, targetZone);
+			stackGrabber(state, zone).draw(1,null, targetZone);
 		} else {
-			state.playerStacks[zone].drawById(id, targetZone);
+			stackGrabber(state, zone).drawById(id, targetZone);
 		}
-		if (toZone==g.ZONE_HELD_CARD) {
+		if (toZone==ZONE_HELD_CARD) {
 			state.mode.startZone.zone = zone;
 			state.mode.startZone.count++;
 		}
 
 	},
-	placeCards(state, {isBefore, id, zone=state.mode.startZone.zone, fromZone = g.ZONE_HELD_CARD}={}) {
-		const targetStack = state.playerStacks[zone];
-		const fromStack = state.playerStacks[fromZone];
-		if (id==g.NULL_ID || id == null) {
+	placeCards(state, {isBefore, id, zone=state.mode.startZone.zone, fromZone = ZONE_HELD_CARD}={}) {
+		const targetStack = stackGrabber(state, zone);
+		const fromStack = stackGrabber(state, fromZone);
+		if (id==NULL_ID || id == null) {
 			if (isBefore) targetStack.place(fromStack, 0);
 			else targetStack.place(fromStack);
 		} else {
@@ -124,7 +138,7 @@ const mutations = {
 		}
 
 	},
-	dropCard(state, zone=g.ZONE_PLAYER_HAND) {
+	dropCard(state, zone=ZONE_PLAYER_HAND) {
 		state.mode.dropZone.zone = zone;
 		state.mode.dropZone.count++;
 	},
@@ -134,7 +148,7 @@ const mutations = {
 			for ( const [,stack] of Object.entries(state.playerStacks)) {
 				stack.clearOrder();
 			}
-			toPlayCards.stash(state.playFieldStacks);
+			toPlayCards.stash(state.table.playFieldStacks);
 
 
 			state.mode.isEditing = false;
@@ -143,8 +157,8 @@ const mutations = {
 	},
 	editFromBoard(state, {editIndex=0}={}) {
 		if (state.mode.isEditing) return;
-		if (state.playFieldStacks.length <= editIndex) throw new Error('Unexpected board index');
-		const playedWord = state.playFieldStacks.splice(editIndex, 1)[0];
+		if (state.table.playFieldStacks.length <= editIndex) throw new Error('Unexpected board index');
+		const playedWord = state.table.playFieldStacks.splice(editIndex, 1)[0];
 		const {playerPlay, playerHand, heldCard } = state.playerStacks;
 		playerHand.place(playerPlay);
 		playerHand.place(heldCard);

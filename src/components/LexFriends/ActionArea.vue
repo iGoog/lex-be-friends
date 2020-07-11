@@ -62,53 +62,59 @@
     import {reactive, computed} from 'vue';
     import Card from "./Card.vue";
 	import CardButton from "./CardButton.vue";
-	import * as g from "../../store/modules/lexGameConstants";
+	import {
+		COMMIT_PLACE_CARD,
+		ZONE_PLAYER_HAND,
+		ZONE_HELD_DISCARD,
+		COMMIT_PULL_CARD, DISPATCH_TURN_DRAW_FROM_ZONE, ZONE_DRAW_PILE, ZONE_DISCARD_PILE, DISPATCH_TURN_PLAY,
+		stackGrabber, ZONE_PLAYER_PLAY
+	} from "../../store/modules/lexGameConstants";
 
 	export default {
 		name: "ActionArea",
 		components: {Card, CardButton},
 		setup(props) {
 			const store = useStore();
-
-			const drawPile = reactive(store.state.lexGame.playerStacks.drawPile.cards);
+			const moduleState = store.state.lexGame;
+			const drawPile = reactive(stackGrabber(moduleState, ZONE_DRAW_PILE).cards);
 			const topDrawPile = computed(() => drawPile.slice(-5, -1));
 			const topDraw = computed(() => drawPile.length > 0 ? drawPile[drawPile.length-1] : null);
 
-			const discardPile = reactive(store.state.lexGame.playerStacks.discardPile.cards);
+			const discardPile = reactive(stackGrabber(moduleState, ZONE_DISCARD_PILE).cards);
 			const topDiscardPile = computed(() => discardPile.slice(-5, -1).reverse());
 			const topDiscard = computed(() => discardPile.length > 0 ? discardPile[discardPile.length-1] : null);
 
-			const heldDiscard = reactive(store.state.lexGame.playerStacks.heldDiscard.cards);
+			const heldDiscard = reactive(stackGrabber(moduleState, ZONE_HELD_DISCARD).cards);
 
             const discardAreaDrop = () => {
-            	if (heldDiscard.length > 0) store.commit(g.COMMIT_PLACE_CARD, {
-		            zone: g.ZONE_PLAYER_HAND,
-                    fromZone: g.ZONE_HELD_DISCARD
+            	if (heldDiscard.length > 0) store.commit(COMMIT_PLACE_CARD, {
+		            zone: ZONE_PLAYER_HAND,
+                    fromZone: ZONE_HELD_DISCARD
 	            });
-	            store.commit(g.COMMIT_PLACE_CARD, {
-		            zone: g.ZONE_HELD_DISCARD
+	            store.commit(COMMIT_PLACE_CARD, {
+		            zone: ZONE_HELD_DISCARD
 	            });
             }
 
             const discardAreaDraw = ( ) => {
             	console.log('discardAreaDraw');
-            	store.commit(g.COMMIT_PULL_CARD, {id: heldDiscard[0].id ,zone: g.ZONE_HELD_DISCARD});
+            	store.commit(COMMIT_PULL_CARD, {id: heldDiscard[0].id ,zone: ZONE_HELD_DISCARD});
             }
 
             const clickTopDraw = () => {
-            	store.dispatch(g.DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: g.ZONE_DRAW_PILE});
+            	store.dispatch(DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: ZONE_DRAW_PILE});
             }
 
 			const clickTopDiscard = () => {
 				if (heldDiscard.length>0) {
-					store.dispatch(g.DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: g.ZONE_DISCARD_PILE});
+					store.dispatch(DISPATCH_TURN_DRAW_FROM_ZONE, {fromZone: ZONE_DISCARD_PILE});
 				}
 			}
 
 			const clickSubmit = () => {
-				const validLength = store.state.lexGame.playerStacks.playerPlay.cards.length >= 2;
+				const validLength = stackGrabber(moduleState, ZONE_PLAYER_PLAY).cards.length >= 2;
 				if (validLength) {
-                    store.dispatch(g.DISPATCH_TURN_PLAY);
+                    store.dispatch(DISPATCH_TURN_PLAY);
                 }
             }
 

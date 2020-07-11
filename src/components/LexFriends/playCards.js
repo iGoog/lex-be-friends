@@ -1,24 +1,32 @@
 import {useStore} from "vuex";
 import {reactive, ref, watch} from "vue";
 import fakeTouchDragFactory from "../../util/fakeTouchDragFactory";
-import * as g from '../../store/modules/lexGameConstants';
+import {
+	COMMIT_PLACE_CARD,
+	COMMIT_PULL_CARD,
+	NULL_ID,
+	ZONE_PLAYER_HAND,
+	stackGrabber,
+	ZONE_HELD_CARD
+} from '../../store/modules/lexGameConstants';
 import {vmin, vw} from "../../util/cssConvert";
 
-const setupPlayCards = (zone= g.ZONE_PLAYER_HAND,
+const setupPlayCards = (zone= ZONE_PLAYER_HAND,
                         opts = { hoverDelayMs:500,
                         }) => {
 	const store = useStore();
+	const moduleState = store.state.lexGame;
 
-	const playCards = reactive(store.state.lexGame.playerStacks[zone].cards);
-	const heldCard = reactive(store.state.lexGame.playerStacks.heldCard.cards);
-	const hoverId = ref(g.NULL_ID);
+	const playCards = reactive(stackGrabber(moduleState, zone).cards);
+	const heldCard = reactive(stackGrabber(moduleState, ZONE_HELD_CARD).cards);
+	const hoverId = ref(NULL_ID);
 	const hoverRight = ref(false);
 	const dropZone = reactive(store.state.lexGame.mode.dropZone);
 	watch(
 		() => dropZone.count,
 		(count, prevCount)=> {
 			if (dropZone.zone!=zone) {
-				hoverId.value = g.NULL_ID;
+				hoverId.value = NULL_ID;
 			} else {
 			}
 		}
@@ -40,10 +48,10 @@ const setupPlayCards = (zone= g.ZONE_PLAYER_HAND,
 			const x = e.x ? e.x : e.clientX;
 			const gutters = gutterCheck(x);
 			if (gutters.leftGutter) {
-				hoverId.value = g.NULL_ID;
+				hoverId.value = NULL_ID;
 				hoverRight.value = true;
 			} else if (gutters.rightGutter) {
-				hoverId.value = g.NULL_ID;
+				hoverId.value = NULL_ID;
 				hoverRight.value = false;
 			}
 		} else if (id != hoverId.value) {
@@ -58,16 +66,16 @@ const setupPlayCards = (zone= g.ZONE_PLAYER_HAND,
 	}
 
 	const draw = (id) => {
-		store.commit(g.COMMIT_PULL_CARD, {id, zone});
+		store.commit(COMMIT_PULL_CARD, {id, zone});
 	}
 	const dropCard = (event) => {
-		// console.log(`drop id: ${ hoverId.value} isBefore: ${(hoverId.value==g.NULL_ID) ? hoverRight.value : !hoverRight.value} zone: ${zone}`);
-		store.commit(g.COMMIT_PLACE_CARD, {
-			isBefore:  (hoverId.value==g.NULL_ID) ? hoverRight.value : !hoverRight.value,
+		// console.log(`drop id: ${ hoverId.value} isBefore: ${(hoverId.value==NULL_ID) ? hoverRight.value : !hoverRight.value} zone: ${zone}`);
+		store.commit(COMMIT_PLACE_CARD, {
+			isBefore:  (hoverId.value==NULL_ID) ? hoverRight.value : !hoverRight.value,
 			id: hoverId.value,
 			zone
 		});
-		hoverId.value = g.NULL_ID;
+		hoverId.value = NULL_ID;
 		return false;
 	}
 
