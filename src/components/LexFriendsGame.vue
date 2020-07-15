@@ -1,5 +1,6 @@
 <!-- no scroll or double tap zoom with v-on:touchmove.stop.prevent v-on:touchstart.stop.prevent -->
 <template>
+<GameConfig/>
 <div id="lexFriends"
      v-on:touchmove.stop.prevent v-on:touchstart.stop.prevent
      v-on:drop.stop.prevent="playCard(g.ZONE_OUT_FIELD)" v-on:dragover.prevent v-on:dragenter.prevent
@@ -14,12 +15,13 @@
 </template>
 <script>
 
+
+	import GameConfig from "./LexFriends/GameConfig.vue";
 	function vh(v) {
 		let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 		return (v * h) / 100;
 	}
 	window.onload = () => window.scroll(0,vh(5));
-
 
 	import Title from "./LexFriends/Title.vue";
 	import Score from "./LexFriends/Score.vue";
@@ -29,10 +31,12 @@
 	import Words from "./LexFriends/Words.vue";
 	import { useStore } from 'vuex';
 	import * as g from '../store/modules/lexGameConstants';
+	import {ref} from 'vue';
+
 
 	export default {
 		name: "LexFriends.vue",
-		components: {Words, Hand, Play, ActionArea, Score, Title},
+		components: {GameConfig, Words, Hand, Play, ActionArea, Score, Title},
         setup(props) {
 	        const store = useStore();
             const playCard = (zone) => {
@@ -45,6 +49,7 @@
 </script>
 <style>
     body {
+        overflow: hidden !important;
         margin: 5vh 0px 7vh 0px !important;
         background: rgb(0,0,0);
         background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,23,133,1) 10%, rgba(28,26,170,0.8015405991498161) 50%, rgba(0,23,133,1) 90%, rgba(0,0,0,1) 100%);

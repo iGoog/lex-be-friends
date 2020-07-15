@@ -33,7 +33,7 @@ const state = () => {
 			playerHand, heldCard, playerPlay, heldDiscard,
 		},
 		players : [
-			{ emojii: '🏴‍☠️', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '', sharedSecret: ''}
+			{ emojii: '🏴‍☠️', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '', sharedSecret: '', ready: false, watching: false}
 		],
 		table : {
 			playFieldStacks : [],
@@ -42,7 +42,9 @@ const state = () => {
 		mode : {
 			isEditing: false,
 			dropZone: {count: 0, zone: ''},
-			startZone: {count: 0, zone: ZONE_PLAYER_HAND}
+			startZone: {count: 0, zone: ZONE_PLAYER_HAND},
+			nameSet: false,
+			gameLaunched: false
 		}
 	};
 };
@@ -52,6 +54,10 @@ const getters = {
 };
 
 const actions = {
+
+	setUserName({commit, state}, {name, emojii}={}) {
+		commit('setPlayerDetails', {name, emojii});
+	},
 
 	turnDrawFromZone({commit, state}, {fromZone=ZONE_DISCARD_PILE}={}) {
 		if (fromZone===ZONE_DRAW_PILE) commit('flipCards', {zone:fromZone});
@@ -98,6 +104,10 @@ const actions = {
 };
 
 const mutations = {
+	setPlayerDetails(state, {name, emojii}={}) {
+		state.players[0].emojii=emojii;
+		state.players[0].name=name;
+	},
 	setMessage(state, message) {
 		state.message = message;
 	},
@@ -108,7 +118,7 @@ const mutations = {
 		stackGrabber(state, zone).shuffle();
 	},
 	flipCards(state, {zone=ZONE_DRAW_PILE, quantity=1}={}) {
-		const stack = state.playerStacks[zone].cards;
+		const stack = stackGrabber(state, zone).cards;
 		for (let i=0; i < quantity && i < stack.length; i++) {
 			stack[stack.length-1-i].hide = !stack[stack.length-1-i].hide;
 		}

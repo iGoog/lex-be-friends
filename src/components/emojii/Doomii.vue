@@ -1,5 +1,6 @@
 <template>
-    <span>{{emojii}}</span>
+    <button v-if="selectable" :class="{isSelected}">{{emojii}}</button>
+    <span v-else>{{emojii}}</span>
 </template>
 
 <script>
@@ -7,7 +8,9 @@
 	export default {
 		name: "Doomii",
         props: {
-			doom: String
+			doom: String,
+            selectable: Boolean,
+	        isSelected: Boolean
         },
         computed: {
 			emojii: vm =>  {
@@ -44,5 +47,25 @@
 </script>
 
 <style scoped>
+button {
+    background: rgba(205,187,0,0);
+    box-shadow: 0px 0px 0px transparent;
+    border: 0px solid transparent;
+    text-shadow: 0px 0px 0px transparent;
+    font-size: 4vmin;
+    padding: 0.2em;
+    border-radius: 0.1em;
+}
+button:hover {
+    box-shadow: 0px 0px 0px transparent;
+    border: 0px solid transparent;
+    text-shadow: 0px 0px 0px transparent;
+}
 
+.isSelected {
+    background-color: orange;
+}
+.selectEmojii {
+
+}
 </style>
