@@ -21,10 +21,10 @@
     position: absolute;
     /* body margin: 5vh 0px 7vh 0px*/
     width: 100%;
-    height: 88vh;
+    height: 100vh;
     z-index: 100;
     padding: 0;
-    margin: 0;
+    margin: -2vh 0 0 0;
 }
 
 .fade-enter-active, .fade-leave-active {

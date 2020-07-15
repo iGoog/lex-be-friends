@@ -41,10 +41,9 @@
 
 
 .playArea {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    background-color: darkorange;
+    /*background: rgb(160,255,248);*/
+    /*background: linear-gradient(126deg, rgba(160,255,248,0.19091386554621848) 4%, rgba(153,193,224,0.20211834733893552) 48%, rgba(0,141,170,0.21052170868347342) 100%);*/
+
+
 }
 </style>

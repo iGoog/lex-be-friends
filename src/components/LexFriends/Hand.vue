@@ -48,7 +48,7 @@
     }
 
     .handArea {
-        background-color: silver;
+        /*background-color: silver;*/
         width: 100%;
         height: 100%;
     }

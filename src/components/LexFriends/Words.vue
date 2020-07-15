@@ -42,7 +42,7 @@
 .wordsArea {
     width: 100%;
     height: 100%;
-    background-color: blanchedalmond;
+    /*background-color: blanchedalmond;*/
     text-align: left;
 }
 .flex {

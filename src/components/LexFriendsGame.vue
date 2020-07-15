@@ -50,9 +50,10 @@
 <style>
     body {
         overflow: hidden !important;
-        margin: 5vh 0px 7vh 0px !important;
-        background: rgb(0,0,0);
-        background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,23,133,1) 10%, rgba(28,26,170,0.8015405991498161) 50%, rgba(0,23,133,1) 90%, rgba(0,0,0,1) 100%);
+        margin: 2vh 0px 10vh 0px !important;
+        /*background: rgb(0,0,0);*/
+        /*background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,23,133,1) 10%, rgba(28,26,170,0.8015405991498161) 50%, rgba(0,23,133,1) 90%, rgba(0,0,0,1) 100%);*/
+        background: url("../assets/back.jpg");
     }
 </style>
 <style scoped>
@@ -61,13 +62,13 @@
         width: 100vw;
         height: 88vh;
         grid-template-areas:
-                "score title "
-                "score words "
-                "deck  deck"
-                "play  play"
-                "hand  hand";
-        grid-template-rows: 1fr 8fr 2fr 2fr 2fr;
-        grid-template-columns: 1fr 3fr ;
+                "x score title z"
+                "x score words z"
+                "x deck  deck  z"
+                "x play  play  z"
+                "x hand  hand  z";
+        grid-template-rows: 1fr 8fr 10vmin 10vmin 10vmin 3vmin;
+        grid-template-columns: 1vmin 1fr 3fr 1vmin;
 
     }
     #title {
