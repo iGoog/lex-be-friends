@@ -11,22 +11,29 @@
         </h1>
         <p><button type="submit" @click="clickNameOkButton()">ok</button></p>
     </Popover>
+    <Popover :show="waitingRoom" :col-spread="true">
+            <div class="waitingArea">
+                <div class="player"  v-for="player in players">
+                   {{statusChar(player)}} <Doomii :doom="player.emojii" /> {{player.name}}
+                </div>
+            </div>
+            <div class="waitingAreaButtons">
+<!--                <button type="button" @click="clickJustWatch()">Just Watch</button>-->
+                <div></div>
+                <button type="button" @click="clickReady()">Ready</button>
+            </div>
+    </Popover>
 </template>
 
 
 <script>
-    /*
-    players : [
-			{ emojii: '🏴‍☠️', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '', sharedSecret: '', ready: false, watching: false}
-		],
-     */
 	import PopoverShade from "../popover/PopoverShade.vue";
 	import Popover from "../popover/Popover.vue";
 	import * as doomii from "../emojii/Doomie.constants";
 	import { DISPATCH_SET_USER } from "../../store/modules/lexGameConstants";
 
     import {useStore} from 'vuex';
-	import {ref, computed} from 'vue';
+	import {ref, computed, reactive} from 'vue';
     import Doomii from "../emojii/Doomii.vue";
 
 	export default {
@@ -39,7 +46,10 @@
 	        const user = state.players[0];
 
 	        const promptUser = computed(()=> user.name=='');
-	        const showAPrompt = computed( () => promptUser.value );
+	        const waitingRoom = computed(()=> (!promptUser.value && !state.mode.gameLaunched ) );
+	        const statusChar = ({ready=false, watching=false}={})=> ready ? '✅' : watching ? '👀' : '❌';
+
+	        const showAPrompt = computed( () => (promptUser.value || waitingRoom.value) );
 	        const userName = ref('');
 	        const emojii = ref('');
 
@@ -52,9 +62,19 @@
             const isSelected = (val) => {
 	        	return val == emojii.value;
             }
+	        const players =  reactive(state.players);
+
+	        const clickReady = () => {
+		        store.dispatch('lexGame/setReadyForGame');
+            }
+
+            const clickJustWatch = () => {
+	            store.dispatch('lexGame/setWatchGame');
+            }
 
             return {promptUser, userName, showAPrompt, emojii, doomii,
-	            clickSelectEmojii, clickNameOkButton, isSelected
+	            clickSelectEmojii, clickNameOkButton, isSelected, waitingRoom, players, statusChar,
+	            clickReady, clickJustWatch
 	        }
         }
 	}
@@ -73,9 +93,27 @@
     button {
         font-size: 4vmin;
     }
+    .waitingArea {
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        text-align: left;
+        padding: 0.5vmin;
+    }
+    .player {
+        font-size: 3vmin;
+        white-space: nowrap;
+        border-radius: 1vmin;
+        padding: 0.2vmin;
+    }
+    .waitingAreaButtons {
+        display: flex;
+        justify-content: space-between;
+    }
 
 
 </style>
 <style>
+
 
 </style>

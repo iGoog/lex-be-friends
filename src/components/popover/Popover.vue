@@ -1,6 +1,6 @@
 <template>
 <transition appear name="slide">
-<div v-if="show" :class="{wide}" class="popoverModal">
+<div v-if="show" :class="{wide, colSpread}" class="popoverModal">
     <slot></slot>
 </div>
 </transition>
@@ -11,7 +11,8 @@
 		name: "Popover",
         props: {
 	        show: Boolean,
-            wide: Boolean
+            wide: Boolean,
+            colSpread: Boolean
         }
 	}
 </script>
@@ -54,18 +55,26 @@
     transform: translateY(0) rotateX(0) scale(1);
     transform-origin: 50% 1400px;
     opacity: 1;
+    z-index: -1;
 }
 
 .slide-leave-to {
     transform: translateY(-600px) rotateX(-30deg) scale(0);
     transform-origin: 50% 100%;
     opacity: 1;
+    z-index: -1;
 }
 
 
 .popoverModal.wide {
     left: 8vw;
     width: 80vw;
+}
+
+.colSpread {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 </style>

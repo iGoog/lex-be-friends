@@ -24,6 +24,7 @@ const state = () => {
 	const heldDiscard = drawPile.draw(0,0, null, showFn);
 	const playerPlay = drawPile.draw(0,0, null, showFn);
 	return {
+		myId: '1',
 		secret: '',
 		message: 'silence',
 		channel: '',
@@ -33,9 +34,9 @@ const state = () => {
 			playerHand, heldCard, playerPlay, heldDiscard,
 		},
 		players : [
-			{ emojii: '', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '', sharedSecret: '', ready: false, watching: false},
-			{ emojii: 'heartbreak', name: 'foooo', turnOrder: 1, active: false, cards: 10, points: 0, id: 'x', sharedSecret: '', ready: false, watching: false},
-			{ emojii: 'bomb', name: 'foooo', turnOrder: 1, active: false, cards: 10, points: 0, id: 'y', sharedSecret: '', ready: false, watching: false}
+			{ emojii: '', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '1', sharedSecret: '', ready: false, watching: false},
+			{ emojii: 'heartbreak', name: 'DR. SBAITSO', turnOrder: 1, active: false, cards: 10, points: 0, id: 'x', sharedSecret: '', ready: true, watching: false},
+			{ emojii: 'bomb', name: 'DOOOOOOOOM', turnOrder: 1, active: false, cards: 10, points: 0, id: 'y', sharedSecret: '', ready: true, watching: false}
 		],
 		table : {
 			playFieldStacks : [],
@@ -56,6 +57,10 @@ const getters = {
 };
 
 const actions = {
+
+	setReadyForGame({commit, state} ) {
+		commit('setReadyForGame');
+	},
 
 	setUserName({commit, state}, {name, emojii}={}) {
 		commit('setPlayerDetails', {name, emojii});
@@ -106,6 +111,15 @@ const actions = {
 };
 
 const mutations = {
+
+	setReadyForGame(state) {
+		let allReady = true;
+		state.players.forEach(value => {
+			if(value.id == state.myId) value.ready = true;
+			else if (!value.ready) allReady = false;
+		});
+		if (allReady) state.mode.gameLaunched = true;
+	},
 	setPlayerDetails(state, {name, emojii}={}) {
 		state.players[0].emojii=emojii;
 		state.players[0].name=name;
