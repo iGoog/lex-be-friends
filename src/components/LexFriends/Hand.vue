@@ -17,7 +17,7 @@
 
 
         >
-            <Card  :="card" :hide="demo" />
+            <Card  :="card"  />
         </li>
     </transition-group>
     </div>
@@ -34,10 +34,8 @@
 		components: {Card},
 		setup(props) {
 			const playArea =  setupPlayCards(g.ZONE_PLAYER_HAND);
-			const demo = ref(true);
-			setTimeout(()=> demo.value = false, 300 );
 
-			return {...playArea, demo };
+			return {...playArea };
 		}
 	}
 </script>
