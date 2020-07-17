@@ -48,9 +48,9 @@
     }
 
     .handArea {
-        /*background-color: silver;*/
-        width: 100%;
-        height: 100%;
+        /*border: solid;*/
+        border-radius: 2vmin;
+
     }
 
 

@@ -45,7 +45,8 @@
 }
 
 .playArea {
-
+    border: solid;
+    border-radius: 2vmin;
 }
 
 .glow {

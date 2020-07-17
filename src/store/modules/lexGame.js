@@ -33,7 +33,9 @@ const state = () => {
 			playerHand, heldCard, playerPlay, heldDiscard,
 		},
 		players : [
-			{ emojii: '🏴‍☠️', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '', sharedSecret: '', ready: false, watching: false}
+			{ emojii: '', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '', sharedSecret: '', ready: false, watching: false},
+			{ emojii: 'heartbreak', name: 'foooo', turnOrder: 1, active: false, cards: 10, points: 0, id: 'x', sharedSecret: '', ready: false, watching: false},
+			{ emojii: 'bomb', name: 'foooo', turnOrder: 1, active: false, cards: 10, points: 0, id: 'y', sharedSecret: '', ready: false, watching: false}
 		],
 		table : {
 			playFieldStacks : [],
