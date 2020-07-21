@@ -3,17 +3,27 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "test" : "jest"
   },
   "dependencies": {
     "sjcl": "^1.0.8",
     "socketcluster-client": "github:iGoog/socketcluster-client",
-    "vue": "^3.0.0-beta.15",
-    "vuex": "^4.0.0-beta.2"
+    "vue": "^3.0.0-rc.1",
+    "vue-router": "^4.0.0-beta.2",
+    "vuex": "^4.0.0-beta.4"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "^3.0.0-beta.15",
-    "cypress": "^4.9.0",
-    "vite": "^1.0.0-beta.3"
+    "@vue/compiler-sfc": "^3.0.0-rc.1",
+    "@vue/test-utils": "^2.0.0-beta.0",
+    "cypress": "^4.10.0",
+    "vite": "^1.0.0-rc.1",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "@types/jest": "^25.2.1",
+    "babel-jest": "^25.2.6",
+    "jest": "^25.2.7",
+    "vue-jest": "^5.0.0-alpha.1",
+    "vue-loader": "^16.0.0-alpha.3"
   }
 }

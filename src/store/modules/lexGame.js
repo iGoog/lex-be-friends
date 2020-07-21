@@ -35,8 +35,8 @@ const state = () => {
 		},
 		players : [
 			{ emojii: '', name: '', turnOrder: 1, active: true, cards: 10, points: 0, id: '1', sharedSecret: '', ready: false, watching: false},
-			{ emojii: 'heartbreak', name: 'DR. SBAITSO', turnOrder: 1, active: false, cards: 10, points: 0, id: 'x', sharedSecret: '', ready: true, watching: false},
-			{ emojii: 'bomb', name: 'DOOOOOOOOM', turnOrder: 1, active: false, cards: 10, points: 0, id: 'y', sharedSecret: '', ready: true, watching: false}
+			{ emojii: 'heartbreak', name: 'DR. SBAITSO', turnOrder: 2, active: false, cards: 10, points: 0, id: 'x', sharedSecret: '', ready: true, watching: false},
+			{ emojii: 'bomb', name: 'DOOOOOOOOM', turnOrder: 3, active: false, cards: 10, points: 0, id: 'y', sharedSecret: '', ready: true, watching: false}
 		],
 		table : {
 			playFieldStacks : [],

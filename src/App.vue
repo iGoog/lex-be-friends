@@ -1,14 +1,10 @@
 <template>
-  <LexFriendsGame />
+  <router-view/>
 </template>
 
 <script>
-import LexFriendsGame from './components/LexFriendsGame.vue';
 
 export default {
-  name: 'App',
-  components: {
-    LexFriendsGame
-  }
+  name: 'App'
 }
 </script>

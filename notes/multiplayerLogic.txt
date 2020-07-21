@@ -1,0 +1,4 @@
+There's a variety of information that gets shared.
+0. A common room needs to be set up, along with a way of creating it.
+1. The players array stores objects of people who should be in the room, along with specifics about a given game state.
+2. The table stores information on shared elements that need to be in sync with each turn action.
